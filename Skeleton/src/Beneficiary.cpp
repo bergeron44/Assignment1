@@ -32,6 +32,11 @@ const vector<int> &Beneficiary::getRequestsIds() const {
 }
 
 int Beneficiary::addRequest(int RequestId) {
-    requestsId.push_back(RequestId);
-    return RequestId; // Return RequestId if added successfully
+    if (canMakeRequest)
+    {
+        requestsId.push_back(RequestId);
+        return RequestId; // Return RequestId if added successfully
+    }
+     return -1; //if error accurred
+
 }
