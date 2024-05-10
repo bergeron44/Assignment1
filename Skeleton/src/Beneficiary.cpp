@@ -1,4 +1,6 @@
 #include "../include/Beneficiary.h"
+#include <iostream>
+#include <algorithm>
 
 Beneficiary::Beneficiary(int id, const string &name, int locationDistance, int maxRequests)
     : id(id), name(name), locationDistance(locationDistance), maxRequests(maxRequests) {}
