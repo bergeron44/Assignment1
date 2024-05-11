@@ -1,4 +1,6 @@
 #include "../include/Action.h"
+#include <iostream>
+#include <algorithm>
 
 CoreAction::CoreAction() : status(ActionStatus::ERROR) {}
 
