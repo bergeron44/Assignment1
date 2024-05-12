@@ -12,11 +12,6 @@
 MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
 {
     std::ifstream configFile(configFilePath);
-     if (!configFile.is_open())
-    {
-        std::cout << "could not open file!" << std::endl;
-        exit(-1);
-    }
     if (!configFile.is_open())
     {
         isOpen = false;
