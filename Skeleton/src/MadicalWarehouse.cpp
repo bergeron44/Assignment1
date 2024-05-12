@@ -12,6 +12,11 @@
 MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
 {
     std::ifstream configFile(configFilePath);
+     if (!configFile.is_open())
+    {
+        std::cout << "could not open file!" << std::endl;
+        exit(-1);
+    }
     if (!configFile.is_open())
     {
         isOpen = false;
@@ -69,21 +74,27 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
             string volunteer_role;
             iss >> volunteer_name;
             iss >> volunteer_role;
-            //inventory manager:
             if (volunteer_role == "inventory")
             {
                 iss >> volunteer_role;
                 string cooldown;
                 iss >> cooldown;
+                InventoryManagerVolunteer *invvol = new InventoryManagerVolunteer(volunteers.size(), volunteer_name, std::stoi(cooldown));
+                volunteers.push_back(invvol);
+
             }
-            //courier:
             else
             {
                 string maxDistance;
                 string distance_per_step;
                 iss >> maxDistance;
                 iss >> distance_per_step;
+                CourierVolunteer *invvol = new CourierVolunteer(volunteers.size(), volunteer_name,maxDistance,distance_per_step);
+                volunteers.push_back(invvol);
+
             }
+
+
         }
     }
     configFile.close();
