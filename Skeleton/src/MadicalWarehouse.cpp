@@ -69,12 +69,14 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
             string volunteer_role;
             iss >> volunteer_name;
             iss >> volunteer_role;
+            //inventory manager:
             if (volunteer_role == "inventory")
             {
                 iss >> volunteer_role;
                 string cooldown;
                 iss >> cooldown;
             }
+            //courier:
             else
             {
                 string maxDistance;
