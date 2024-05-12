@@ -10,7 +10,7 @@ enum class ActionStatus{
 };
 
 enum class beneficiaryType{
-    Soldier, Civilian
+    Clinic, Hospital, Other
 };
 
 

@@ -86,10 +86,10 @@ void AddRequset::act(MedicalWareHouse &medWareHouse)
         return;
     }
 
-    SupplyRequest *SupplyRequest = new SupplyRequest(medWareHouse.getNewSupplyRequestId(), customerId, customer.getCustomerDistance());
+    SupplyRequest *SupplyRequest = new SupplyRequest(medWareHouse.getNewSupplyRequestId(), beneficiaryId, Beneficiary.getBeneficiaryDistance());
 
     medWareHouse.SupplyRequest(SupplyRequest);
-    if (customer.SupplyRequest(SupplyRequest->getId()) == -1)
+    if (Beneficiary.SupplyRequest(SupplyRequest->getId()) == -1)
     {
         error("FATAL @ AddOrder::Act");
         return;
@@ -121,10 +121,48 @@ AddRequset *AddRequset::clone() const
 
 // Implementation of RegisterBeneficiary class
 RegisterBeneficiary::RegisterBeneficiary(const string &beneficiaryName, const string &beneficiaryType, int distance, int maxRequests) 
-    : beneficiaryName(beneficiaryName), beneficiaryType(beneficiaryType), distance(distance), maxRequests(maxRequests) {}
+    : CoreAction() , beneficiaryName(beneficiaryName), beneficiaryType(stringToBeneficiaryType(beneficiaryType)), distance(distance), maxRequests(maxRequests) {}
 
 void RegisterBeneficiary::act(MedicalWareHouse &medWareHouse) {
-    // Implementation of act method
+    medWareHouse.addAction(this);
+
+    if ((beneficiaryType != beneficiaryType::Clinic && beneficiaryType != beneficiaryType::Hospital)
+)
+    {
+        error("Invalid customer type");
+        return;
+    }
+
+    if (distance <= 0)
+    {
+        error("Distance must be positive");
+        return;
+    }
+
+    if (maxRequests <= 0)
+    {
+        error("Max orders must be positive");
+        return;
+    }
+
+    Beneficiary *Beneficiary;
+    switch (beneficiaryType)
+    {
+    case beneficiaryType::Hospital:
+        Beneficiary = new HospitalBeneficiary(medWareHouse.getNewBeneficiaryId(), beneficiaryName, distance, maxRequests);
+        break;
+
+    case beneficiaryType::Clinic:
+        Beneficiary = new ClinicBeneficiary(medWareHouse.getNewBeneficiaryId(), beneficiaryName, distance, maxRequests);
+        break;
+
+    default:
+        // This should never happen
+        return;
+    }
+
+    medWareHouse.AddBeneficiary(Beneficiary);
+    complete();
 }
 
 RegisterBeneficiary* RegisterBeneficiary::clone() const {
@@ -132,5 +170,41 @@ RegisterBeneficiary* RegisterBeneficiary::clone() const {
 }
 
 string RegisterBeneficiary::toString() const {
-    // Implementation of toString method
+     string name = "AddBeneficiary";
+    string args = beneficiaryName + " " + BeneficiaryTypeToString(beneficiaryType) + " " + std::to_string(distance) + " " + std::to_string(maxRequests);
+    string s ="";
+       if (this->getStatus() == ActionStatus::ERROR)
+      {
+        s= "ERROR";
+      }
+
+      else
+      {
+        s="COMPLETED";
+      }
+   
+    return name + " " + args + " " + s;
+}
+
+//help function
+// helper function I -> string to CustomerType enum
+beneficiaryType stringToBeneficiaryType(const string &ct)
+{
+    if (ct == "Hospital")
+        return beneficiaryType::Hospital;
+
+    else 
+        return beneficiaryType::Clinic;
+
+}
+
+// helper function II -> CustomerType enum to string
+string BeneficiaryTypeToString(beneficiaryType ct)
+{
+    if (ct == beneficiaryType::Hospital)
+        return "Hospital";
+
+    else 
+        return "Clinic";
+
 }
