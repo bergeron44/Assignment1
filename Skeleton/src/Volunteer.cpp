@@ -1,6 +1,10 @@
 #include "../include/Volunteer.h"
 #include <iostream>
 #include <algorithm>
+#include <string>
+#include <sstream>
+#include <iostream>
+#include <stdexcept>
 
 Volunteer::Volunteer(int id, const string &name)
     : id(id),
@@ -35,6 +39,8 @@ bool Volunteer::isBusy() const
     return activeRequestId != NO_REQUEST;
 }
 
+// InventoryManagerVolunteer
+
 InventoryManagerVolunteer::InventoryManagerVolunteer(int id, const string &name, int coolDown)
     : Volunteer(id, name),
       coolDown(coolDown),
@@ -54,7 +60,7 @@ void InventoryManagerVolunteer::step()
     {
         completedRequestId = getActiveRequestId();
         activeRequestId = NO_REQUEST;
-        timeLeft=getCoolDown();
+        timeLeft = getCoolDown();
     }
 }
 
@@ -77,7 +83,7 @@ bool InventoryManagerVolunteer::decreaseCoolDown()
 
 bool InventoryManagerVolunteer::hasRequestsLeft() const
 {
-    return timeLeft == 0;
+    return timeLeft > 0;
 }
 
 // override func:
@@ -92,6 +98,121 @@ void InventoryManagerVolunteer::acceptRequest(const SupplyRequest &request)
     if (canTakeRequest)
     {
         activeRequestId = request.getId();
-        timeLeft=getCoolDown();
+        timeLeft = getCoolDown();
     }
+}
+
+// override func:
+string InventoryManagerVolunteer::toString() const
+{
+}
+
+
+
+// CourierVolunteer
+
+CourierVolunteer::CourierVolunteer(int id, const string &name, int maxDistance, int distancePerStep)
+    : Volunteer(id, name),
+      maxDistance(maxDistance),
+      distancePerStep(distancePerStep),
+      distanceLeft(0)
+{
+}
+
+CourierVolunteer *CourierVolunteer::clone() const
+{
+    return new CourierVolunteer(*this);
+}
+
+int CourierVolunteer::getDistanceLeft() const
+{
+    return distanceLeft;
+}
+
+int CourierVolunteer::getMaxDistance() const
+{
+    return maxDistance;
+}
+
+int CourierVolunteer::getDistancePerStep() const
+{
+    return distancePerStep;
+}
+
+bool CourierVolunteer::decreaseDistanceLeft()
+{
+    if (distanceLeft <= distancePerStep)
+    {
+        distanceLeft = 0;
+        return true;
+    }
+    distanceLeft = distanceLeft - distancePerStep;
+    return false;
+}
+
+bool CourierVolunteer::hasRequestsLeft() const
+{
+    return distanceLeft > 0;
+}
+
+int getDistance(const SupplyRequest &request)
+{
+    string requestSTR = request.toString();
+    int distanceInt;
+    string distance;
+    std::istringstream iss(requestSTR);
+    iss >> distance;
+    iss >> distance;
+    iss >> distance;
+    try
+    {
+        distanceInt = std::stoi(distance);
+    }
+    catch (const std::invalid_argument &e)
+    {
+        std::cout << "Invalid argument: " << e.what() << std::endl;
+    }
+    catch (const std::out_of_range &e)
+    {
+        std::cerr << "Out of range: " << e.what() << std::endl;
+    }
+    return distanceInt;
+}
+
+bool CourierVolunteer::canTakeRequest(const SupplyRequest &request) const
+{
+    if (!hasRequestsLeft() && !isBusy())
+    {
+        int distanceInt = getDistance(request);
+        if (distanceInt <= maxDistance)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+// override func:
+void CourierVolunteer::acceptRequest(const SupplyRequest &request)
+{
+    if (canTakeRequest(request))
+    {
+        distanceLeft = getDistance(request);
+        activeRequestId = request.getId();
+    }
+}
+
+// override func:
+void CourierVolunteer::step()
+{
+    if (activeRequestId != NO_REQUEST && decreaseDistanceLeft())
+    {
+        completedRequestId = getActiveRequestId();
+        activeRequestId = NO_REQUEST;
+    }
+}
+
+// override func:
+string CourierVolunteer::toString() const
+{
 }
