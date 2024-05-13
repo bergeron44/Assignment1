@@ -27,6 +27,35 @@ int toInt(string str)
     return num;
 }
 
+void MedicalWareHouse::close()
+{
+    isOpen = false;
+}
+
+void MedicalWareHouse::open()
+{
+    isOpen = true;
+}
+
+void MedicalWareHouse::start()
+{
+    open();
+    std::cout << "Warehouse is open!" << std::endl;
+
+    string inputString;
+    const vector<CoreAction*> a=getActions();
+    int i=0;
+    while (isOpen)
+    {
+        std::getline(std::cin, inputString);
+        CoreAction *action = a[i];
+        if (action!=nullptr)
+            action->act(*this);
+
+        i++;
+    }
+}
+
 MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
 {
     std::ifstream configFile(configFilePath);
@@ -143,21 +172,6 @@ const vector<Beneficiary *> &MedicalWareHouse::getBeneficiaries() const
 int MedicalWareHouse::getNewRequestId() const
 {
     return pendingRequests.size() + inProcessRequests.size() + completedRequests.size();
-}
-
-void MedicalWareHouse::start()
-{
-    open();
-    std::cout << "Warehouse is open!" << std::endl;
-
-    string inputString;
-    while (isOpen)
-    {
-        std::getline(std::cin, inputString);
-        CoreAction *action = MedicalWareHouse::parse(inputString);
-        if (!action->isNull)
-            action->act(*this);
-    }
 }
 
 SupplyRequest &MedicalWareHouse::getRequest(int requestId) const
