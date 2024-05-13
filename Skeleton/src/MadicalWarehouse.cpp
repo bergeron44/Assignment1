@@ -116,4 +116,18 @@ void MedicalWareHouse::start()
             action->act(*this);
     }
 }
+SupplyRequest &MedicalWareHouse::getRequest(int requestId) const
+{
+     for (SupplyRequest *request : pendingRequests)
+        if (request->getId() == requestId)
+            return request;
 
+    for (SupplyRequest *request : inProcessRequests)
+        if (request->getId() == requestId)
+            return request;     
+
+    for (SupplyRequest *request : completedRequests)
+        if (request->getId() == requestId)
+            return request;
+
+}
