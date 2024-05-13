@@ -104,6 +104,7 @@ void MedicalWareHouse::open()
 {
     isOpen = true;
 }
+
 Beneficiary &MedicalWareHouse::getBeneficiary(int beneficiaryId) const
 {
     for (const auto &beneficiary : Beneficiaries)
@@ -149,28 +150,34 @@ void MedicalWareHouse::start()
     std::cout << "Warehouse is open!" << std::endl;
 
     string inputString;
+    const vector<CoreAction*> a=getActions();
+    int i=0;
     while (isOpen)
     {
         std::getline(std::cin, inputString);
-        CoreAction *action = MedicalWareHouse::parse(inputString);
-        if (!action->isNull)
+        CoreAction *action = a[i];
+        if (action!=nullptr)
             action->act(*this);
+
+        i++;
     }
-<<<<<<< Updated upstream
 }
+
+<<<<<<< Updated upstream
+
 SupplyRequest &MedicalWareHouse::getRequest(int requestId) const
 {
      for (SupplyRequest *request : pendingRequests)
         if (request->getId() == requestId)
-            return request;
+            return *request;
 
     for (SupplyRequest *request : inProcessRequests)
         if (request->getId() == requestId)
-            return request;     
+            return *request;     
 
     for (SupplyRequest *request : completedRequests)
         if (request->getId() == requestId)
-            return request;
+            return *request;
 
 }
 =======
