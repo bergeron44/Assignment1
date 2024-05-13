@@ -107,8 +107,6 @@ string InventoryManagerVolunteer::toString() const
 {
 }
 
-
-
 // CourierVolunteer
 
 CourierVolunteer::CourierVolunteer(int id, const string &name, int maxDistance, int distancePerStep)
@@ -155,35 +153,11 @@ bool CourierVolunteer::hasRequestsLeft() const
     return distanceLeft > 0;
 }
 
-int getDistance(const SupplyRequest &request)
-{
-    string requestSTR = request.toString();
-    int distanceInt;
-    string distance;
-    std::istringstream iss(requestSTR);
-    iss >> distance;
-    iss >> distance;
-    iss >> distance;
-    try
-    {
-        distanceInt = std::stoi(distance);
-    }
-    catch (const std::invalid_argument &e)
-    {
-        std::cout << "Invalid argument: " << e.what() << std::endl;
-    }
-    catch (const std::out_of_range &e)
-    {
-        std::cerr << "Out of range: " << e.what() << std::endl;
-    }
-    return distanceInt;
-}
-
 bool CourierVolunteer::canTakeRequest(const SupplyRequest &request) const
 {
     if (!hasRequestsLeft() && !isBusy())
     {
-        int distanceInt = getDistance(request);
+        int distanceInt = request.getDistance();
         if (distanceInt <= maxDistance)
         {
             return true;
@@ -197,7 +171,7 @@ void CourierVolunteer::acceptRequest(const SupplyRequest &request)
 {
     if (canTakeRequest(request))
     {
-        distanceLeft = getDistance(request);
+        distanceLeft = request.getDistance();
         activeRequestId = request.getId();
     }
 }
