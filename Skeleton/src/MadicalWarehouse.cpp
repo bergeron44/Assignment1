@@ -74,8 +74,9 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
                 iss >> volunteer_role;
                 string cooldown;
                 iss >> cooldown;
-                InventoryManagerVolunteer *invvol = new InventoryManagerVolunteer(volunteers.size(), volunteer_name, std::stoi(cooldown));
+                InventoryManagerVolunteer *invvol = new InventoryManagerVolunteer(volunteerCounter, volunteer_name, std::stoi(cooldown));
                 volunteers.push_back(invvol);
+                volunteerCounter++;
 
             }
             else
@@ -84,8 +85,9 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
                 string distance_per_step;
                 iss >> maxDistance;
                 iss >> distance_per_step;
-                CourierVolunteer *invvol = new CourierVolunteer(volunteers.size(), volunteer_name,maxDistance,distance_per_step);
+                CourierVolunteer *invvol = new CourierVolunteer(volunteerCounter, volunteer_name,maxDistance,distance_per_step);
                 volunteers.push_back(invvol);
+                volunteerCounter++;
 
             }
 
@@ -114,3 +116,4 @@ void MedicalWareHouse::start()
             action->act(*this);
     }
 }
+

@@ -66,7 +66,6 @@ AddRequset::AddRequset(int id) : CoreAction(), beneficiaryId(id) {}
 void AddRequset::act(MedicalWareHouse &medWareHouse)
 {
     medWareHouse.addAction(this);
-
     if (beneficiaryId < 0)
     {
         error("Beneficiary ID must be positive");
@@ -76,7 +75,7 @@ void AddRequset::act(MedicalWareHouse &medWareHouse)
     Beneficiary &Beneficiary = medWareHouse.getBeneficiary(beneficiaryId);
     if (Beneficiary.getId() == -1)//pay attention when we write the getBeneficiary
     {
-        error("Customer does not exist");
+        error("Beneficiary does not exist");
         return;
     }
 
@@ -86,14 +85,9 @@ void AddRequset::act(MedicalWareHouse &medWareHouse)
         return;
     }
 
-    SupplyRequest *SupplyRequest = new SupplyRequest(medWareHouse.getNewSupplyRequestId(), beneficiaryId, Beneficiary.getBeneficiaryDistance());
+  SupplyRequest *newSupplyRequest = new SupplyRequest(medWareHouse.getNewSupplyRequestId(), beneficiaryId, Beneficiary.getBeneficiaryDistance());
 
-    medWareHouse.SupplyRequest(SupplyRequest);
-    if (Beneficiary.SupplyRequest(SupplyRequest->getId()) == -1)
-    {
-        error("FATAL @ AddOrder::Act");
-        return;
-    }
+    medWareHouse.addRequest(newSupplyRequest);
     complete();
 }
 
