@@ -22,8 +22,12 @@ class MedicalWareHouse {
         Volunteer &getVolunteer(int volunteerId) const;
         SupplyRequest &getRequest(int requestId) const;
         const vector<CoreAction*> &getActions() const;
+        const vector<Volunteer*> &getVolunteers() const;
+        const vector<Beneficiary*> &getBeneficiaries() const;
+        int getNewRequestId() const;
         void close();
         void open();
+
 
     private:
         bool isOpen;
