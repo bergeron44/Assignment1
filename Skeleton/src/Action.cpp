@@ -74,7 +74,7 @@ void AddRequset::act(MedicalWareHouse &medWareHouse)
     }
 
     Beneficiary &Beneficiary = medWareHouse.getBeneficiary(beneficiaryId);
-    if (Beneficiary.getId() == -1)
+    if (Beneficiary.getId() == -1)//pay attention when we write the getBeneficiary
     {
         error("Customer does not exist");
         return;
@@ -160,7 +160,6 @@ void RegisterBeneficiary::act(MedicalWareHouse &medWareHouse) {
         // This should never happen
         return;
     }
-
     medWareHouse.AddBeneficiary(Beneficiary);
     complete();
 }
