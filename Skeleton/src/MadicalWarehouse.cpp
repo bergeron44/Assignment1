@@ -53,12 +53,12 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
             }
             if (facility_type == "hospital")
             {
-                HospitalBeneficiary* hospitalBeneficiary=new HospitalBeneficiary(beneficiaryCounter, beneficiary_name, location_distanceInt, max_requestsInt);
+                HospitalBeneficiary *hospitalBeneficiary = new HospitalBeneficiary(beneficiaryCounter, beneficiary_name, location_distanceInt, max_requestsInt);
                 Beneficiaries.push_back(hospitalBeneficiary);
             }
             else
             {
-                ClinicBeneficiary* clinicBeneficiary =new ClinicBeneficiary(beneficiaryCounter, beneficiary_name, location_distanceInt, max_requestsInt);
+                ClinicBeneficiary *clinicBeneficiary = new ClinicBeneficiary(beneficiaryCounter, beneficiary_name, location_distanceInt, max_requestsInt);
                 Beneficiaries.push_back(clinicBeneficiary);
             }
             beneficiaryCounter++;
@@ -74,10 +74,8 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
                 iss >> volunteer_role;
                 string cooldown;
                 iss >> cooldown;
-                InventoryManagerVolunteer *invvol = new InventoryManagerVolunteer(volunteerCounter, volunteer_name, std::stoi(cooldown));
+                InventoryManagerVolunteer *invvol = new InventoryManagerVolunteer(volunteers.size(), volunteer_name, std::stoi(cooldown));
                 volunteers.push_back(invvol);
-                volunteerCounter++;
-
             }
             else
             {
@@ -85,23 +83,58 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
                 string distance_per_step;
                 iss >> maxDistance;
                 iss >> distance_per_step;
-                CourierVolunteer *invvol = new CourierVolunteer(volunteerCounter, volunteer_name,maxDistance,distance_per_step);
+                CourierVolunteer *invvol = new CourierVolunteer(volunteers.size(), volunteer_name, maxDistance, distance_per_step);
                 volunteers.push_back(invvol);
-                volunteerCounter++;
-
             }
-
-
         }
         else
         {
             std::cout << "Could not parse: " << line << std::endl;
             continue;
         }
-   
     }
     configFile.close();
 }
+
+Beneficiary &MedicalWareHouse::getBeneficiary(int beneficiaryId) const
+{
+    for (const auto &beneficiary : Beneficiaries)
+    {
+        if (beneficiary->getId() == beneficiaryId)
+        {
+            return *beneficiary;
+        }
+    }
+    throw std::runtime_error("Beneficiary with ID " + std::to_string(beneficiaryId) + " not found.");
+}
+
+Volunteer &MedicalWareHouse::getVolunteer(int volunteerId) const
+{
+    for (const auto &volunteer : volunteers)
+    {
+        if (volunteer->getId() == volunteerId)
+        {
+            return *volunteer;
+        }
+    }
+    throw std::runtime_error("Volunteer with ID " + std::to_string(volunteerId) + " not found.");
+}
+
+const vector<CoreAction *> &MedicalWareHouse::getActions() const
+{
+    return actionsLog;
+}
+
+const vector<Volunteer *> &MedicalWareHouse::getVolunteers() const
+{
+    return volunteers;
+}
+
+const vector<Beneficiary *> &MedicalWareHouse::getBeneficiaries() const
+{
+    return Beneficiaries;
+}
+
 void MedicalWareHouse::start()
 {
     open();
@@ -115,6 +148,7 @@ void MedicalWareHouse::start()
         if (!action->isNull)
             action->act(*this);
     }
+<<<<<<< Updated upstream
 }
 SupplyRequest &MedicalWareHouse::getRequest(int requestId) const
 {
@@ -131,3 +165,6 @@ SupplyRequest &MedicalWareHouse::getRequest(int requestId) const
             return request;
 
 }
+=======
+}
+>>>>>>> Stashed changes
