@@ -1,4 +1,5 @@
 #include "../include/Action.h"
+#include "../include/Volunteer.h"
 #include <iostream>
 #include <algorithm>
 
@@ -25,19 +26,18 @@ string CoreAction::getErrorMsg() const {
 SimulateStep::SimulateStep(int numOfSteps) : CoreAction(), numOfSteps(numOfSteps) {}
 
 void SimulateStep::act(MedicalWareHouse &medWareHouse) {
-       medWareHouse.addAction(this);
-
-    if (numOfSteps <= 0)
+    //step the volunteers
+    vector<Volunteer*> volunteers=medWareHouse.getVolunteers();
+    int length=volunteers.size();
+    for (const auto &volunteer : volunteers)
     {
-        error("Number of steps must be positive!");
-        return;
+        for (int i = 0; i < numOfSteps; ++i) {
+            volunteer->step();
+        }    
     }
-
-    for (int i = 0; i < numOfSteps; i++)
-        medWareHouse.simulateStep();
-
     complete();
 }
+
 
 std::string SimulateStep::toString() const {
      string name = "SimulateStep";
@@ -66,6 +66,7 @@ AddRequset::AddRequset(int id) : CoreAction(), beneficiaryId(id) {}
 void AddRequset::act(MedicalWareHouse &medWareHouse)
 {
     medWareHouse.addAction(this);
+
     if (beneficiaryId < 0)
     {
         error("Beneficiary ID must be positive");
@@ -75,7 +76,7 @@ void AddRequset::act(MedicalWareHouse &medWareHouse)
     Beneficiary &Beneficiary = medWareHouse.getBeneficiary(beneficiaryId);
     if (Beneficiary.getId() == -1)//pay attention when we write the getBeneficiary
     {
-        error("Beneficiary does not exist");
+        error("Customer does not exist");
         return;
     }
 
@@ -85,9 +86,14 @@ void AddRequset::act(MedicalWareHouse &medWareHouse)
         return;
     }
 
-  SupplyRequest *newSupplyRequest = new SupplyRequest(medWareHouse.getNewSupplyRequestId(), beneficiaryId, Beneficiary.getBeneficiaryDistance());
+    SupplyRequest *SupplyRequest = new SupplyRequest(medWareHouse.getNewSupplyRequestId(), beneficiaryId, Beneficiary.getBeneficiaryDistance());
 
-    medWareHouse.addRequest(newSupplyRequest);
+    medWareHouse.SupplyRequest(SupplyRequest);
+    if (Beneficiary.SupplyRequest(SupplyRequest->getId()) == -1)
+    {
+        error("FATAL @ AddOrder::Act");
+        return;
+    }
     complete();
 }
 
