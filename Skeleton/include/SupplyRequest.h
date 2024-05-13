@@ -25,6 +25,7 @@ class SupplyRequest {
         void setCourierId(int CourierId);
         int getInventoryManagerId() const;
         int getCourierId() const;
+        int getDistance() const;
         RequestStatus getStatus() const;
         const string toString() const;
 
