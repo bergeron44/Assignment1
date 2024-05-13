@@ -9,24 +9,6 @@
 #include "../include/SupplyRequest.h"
 #include "../include/Action.h"
 
-int toInt(string str)
-{
-    int num;
-    try
-    {
-        num = std::stoi(str);
-    }
-    catch (const std::invalid_argument &e)
-    {
-        std::cout << "Invalid argument: " << e.what() << std::endl;
-    }
-    catch (const std::out_of_range &e)
-    {
-        std::cerr << "Out of range: " << e.what() << std::endl;
-    }
-    return num;
-}
-
 MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
 {
     std::ifstream configFile(configFilePath);
@@ -35,7 +17,7 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
         isOpen = false;
         throw std::runtime_error("Failed to open configuration file " + configFilePath);
     }
-    isOpen = false;
+    isOpen = true;
     beneficiaryCounter = 0;
     volunteerCounter = 0;
     string line;
@@ -54,14 +36,29 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
             iss >> facility_type;
             iss >> location_distance;
             iss >> max_requests;
+            int location_distanceInt;
+            int max_requestsInt;
+            try
+            {
+                location_distanceInt = std::stoi(location_distance);
+                max_requestsInt = std::stoi(max_requests);
+            }
+            catch (const std::invalid_argument &e)
+            {
+                std::cout << "Invalid argument: " << e.what() << std::endl;
+            }
+            catch (const std::out_of_range &e)
+            {
+                std::cerr << "Out of range: " << e.what() << std::endl;
+            }
             if (facility_type == "hospital")
             {
-                HospitalBeneficiary *hospitalBeneficiary = new HospitalBeneficiary(beneficiaryCounter, beneficiary_name, toInt(location_distance), toInt(max_requests));
+                HospitalBeneficiary *hospitalBeneficiary = new HospitalBeneficiary(beneficiaryCounter, beneficiary_name, location_distanceInt, max_requestsInt);
                 Beneficiaries.push_back(hospitalBeneficiary);
             }
             else
             {
-                ClinicBeneficiary *clinicBeneficiary = new ClinicBeneficiary(beneficiaryCounter, beneficiary_name, toInt(location_distance), toInt(max_requests));
+                ClinicBeneficiary *clinicBeneficiary = new ClinicBeneficiary(beneficiaryCounter, beneficiary_name, location_distanceInt, max_requestsInt);
                 Beneficiaries.push_back(clinicBeneficiary);
             }
             beneficiaryCounter++;
@@ -77,9 +74,8 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
                 iss >> volunteer_role;
                 string cooldown;
                 iss >> cooldown;
-                InventoryManagerVolunteer *invvol = new InventoryManagerVolunteer(volunteerCounter, volunteer_name, toInt(cooldown));
+                InventoryManagerVolunteer *invvol = new InventoryManagerVolunteer(volunteers.size(), volunteer_name, std::stoi(cooldown));
                 volunteers.push_back(invvol);
-                volunteerCounter++;
             }
             else
             {
@@ -87,9 +83,8 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
                 string distance_per_step;
                 iss >> maxDistance;
                 iss >> distance_per_step;
-                CourierVolunteer *invvol = new CourierVolunteer(volunteerCounter, volunteer_name, toInt(maxDistance), toInt(distance_per_step));
+                CourierVolunteer *invvol = new CourierVolunteer(volunteers.size(), volunteer_name, maxDistance, distance_per_step);
                 volunteers.push_back(invvol);
-                volunteerCounter++;
             }
         }
         else
@@ -100,7 +95,15 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
     }
     configFile.close();
 }
+void MedicalWareHouse::close()
+{
+    isOpen = false;
+}
 
+void MedicalWareHouse::open()
+{
+    isOpen = true;
+}
 Beneficiary &MedicalWareHouse::getBeneficiary(int beneficiaryId) const
 {
     for (const auto &beneficiary : Beneficiaries)
@@ -140,11 +143,6 @@ const vector<Beneficiary *> &MedicalWareHouse::getBeneficiaries() const
     return Beneficiaries;
 }
 
-int MedicalWareHouse::getNewRequestId() const
-{
-    return pendingRequests.size() + inProcessRequests.size() + completedRequests.size();
-}
-
 void MedicalWareHouse::start()
 {
     open();
@@ -158,20 +156,24 @@ void MedicalWareHouse::start()
         if (!action->isNull)
             action->act(*this);
     }
+<<<<<<< Updated upstream
 }
-
 SupplyRequest &MedicalWareHouse::getRequest(int requestId) const
 {
-    for (SupplyRequest *request : pendingRequests)
+     for (SupplyRequest *request : pendingRequests)
         if (request->getId() == requestId)
-            return *request;
+            return request;
 
     for (SupplyRequest *request : inProcessRequests)
         if (request->getId() == requestId)
-            return *request;
+            return request;     
 
     for (SupplyRequest *request : completedRequests)
         if (request->getId() == requestId)
-            return *request;
-    throw std::runtime_error("Request with ID " + std::to_string(requestId) + " not found.");
+            return request;
+
 }
+=======
+}
+
+>>>>>>> Stashed changes
