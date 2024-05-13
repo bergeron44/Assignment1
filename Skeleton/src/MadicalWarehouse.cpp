@@ -91,6 +91,26 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
 
 
         }
+        else
+        {
+            std::cout << "Could not parse: " << line << std::endl;
+            continue;
+        }
+   
     }
     configFile.close();
+}
+void MedicalWareHouse::start()
+{
+    open();
+    std::cout << "Warehouse is open!" << std::endl;
+
+    string inputString;
+    while (isOpen)
+    {
+        std::getline(std::cin, inputString);
+        CoreAction *action = MedicalWareHouse::parse(inputString);
+        if (!action->isNull)
+            action->act(*this);
+    }
 }
