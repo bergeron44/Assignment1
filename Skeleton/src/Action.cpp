@@ -26,9 +26,7 @@ string CoreAction::getErrorMsg() const {
 SimulateStep::SimulateStep(int numOfSteps) : CoreAction(), numOfSteps(numOfSteps) {}
 
 void SimulateStep::act(MedicalWareHouse &medWareHouse) {
-<<<<<<< HEAD
     //step the volunteers
-=======
     medWareHouse.addAction(this);
 
     if (numOfSteps <= 0)
@@ -40,7 +38,6 @@ void SimulateStep::act(MedicalWareHouse &medWareHouse) {
     for (int i = 0; i < numOfSteps; i++)
         medWareHouse.simulateStep();
 
->>>>>>> d2d86ce (comit simulTE STEP)
     complete();
 }
 
