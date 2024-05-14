@@ -87,6 +87,12 @@ bool InventoryManagerVolunteer::hasRequestsLeft() const
 }
 
 // override func:
+int InventoryManagerVolunteer::getType() const
+{
+    return 0;
+}
+
+// override func:
 bool InventoryManagerVolunteer::canTakeRequest(const SupplyRequest &request) const
 {
     return hasRequestsLeft() & isBusy();
@@ -151,6 +157,12 @@ bool CourierVolunteer::decreaseDistanceLeft()
 bool CourierVolunteer::hasRequestsLeft() const
 {
     return distanceLeft > 0;
+}
+
+// override func:
+int InventoryManagerVolunteer::getType() const
+{
+    return 1;
 }
 
 bool CourierVolunteer::canTakeRequest(const SupplyRequest &request) const

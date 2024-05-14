@@ -122,6 +122,22 @@ void MedicalWareHouse::start()
     }
 }
 
+void MedicalWareHouse::addRequest(SupplyRequest *request)
+{
+    switch (request->getStatus())
+    {
+    case RequestStatus::PENDING:
+        pendingRequests.push_back(request);
+        break;
+    case RequestStatus::DONE:
+        completedRequests.push_back(request);
+        break;
+    default:
+        inProcessRequests.push_back(request);
+        break;
+    }
+}
+
 Beneficiary &MedicalWareHouse::getBeneficiary(int beneficiaryId) const
 {
     for (const auto &beneficiary : Beneficiaries)
@@ -201,5 +217,4 @@ void MedicalWareHouse::open()
 
 void MedicalWareHouse::simulateStep()
 {
-   
 }
