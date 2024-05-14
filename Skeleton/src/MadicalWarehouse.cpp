@@ -229,4 +229,126 @@ void MedicalWareHouse::open()
 
 void MedicalWareHouse::simulateStep()
 {
+<<<<<<< HEAD
+=======
+    // step 1
+    int n = pendingRequests.size();
+    SupplyRequest **requestArray = new SupplyRequest *[n];
+
+    for (int i = 0; i < n; i++)
+        requestArray[i] = pendingRequests[i];
+
+    for (int i = 0; i < n; i++)
+    {
+        SupplyRequest *supplyRequest = requestArray[i];
+        if (supplyRequest->getStatus() == RequestStatus::PENDING)
+        {
+            for (Volunteer *volunteer : volunteers)
+                if (volunteer->getType() == 0)
+                    if (volunteer->canTakeRequest(*supplyRequest))
+                    {
+                        volunteer->acceptRequest(*supplyRequest);
+                        supplyRequest->setStatus(RequestStatus::COLLECTING);
+                        supplyRequest->setCourierId(volunteer->getId());
+                        inProcessRequests.push_back(supplyRequest);
+                        auto it = std::find(pendingRequests.begin(), pendingRequests.end(), supplyRequest);
+                         if (it != pendingRequests.end())
+                         {
+                                pendingRequests.erase(it);
+                         }
+                            
+                        break;
+                    }
+        }
+        else if (supplyRequest->getStatus() == RequestStatus::COLLECTING)
+        {
+            for (Volunteer *volunteer : volunteers)
+                if (volunteer->getType() == 1)
+                    if (volunteer->canTakeRequest(*supplyRequest))
+                    {
+                        volunteer->acceptRequest(*supplyRequest);
+                        supplyRequest->setStatus(RequestStatus::ON_THE_WAY);
+                        supplyRequest->setCourierId(volunteer->getId());
+                        inProcessRequests.push_back(supplyRequest);
+                         auto it = std::find(pendingRequests.begin(), pendingRequests.end(), supplyRequest);
+                         if (it != pendingRequests.end())
+                         {
+                                pendingRequests.erase(it);
+                         }
+                        break;
+                    }
+        }
+        else
+        {
+            std::cout << "reques of illegal type in pendingOrders /WH " << __LINE__ << std::endl;
+            std::cout << supplyRequest->toString();
+            throw;
+        }
+    }
+
+    // step 2
+    for (Volunteer *volunteer : volunteers)
+        volunteer->step();
+
+    // step 3
+    for (Volunteer *volunteer : volunteers)
+        if (!volunteer->isBusy() && volunteer->getCompletedOrderId() != NO_ORDER)
+        {
+            SupplyRequest *supplyRequest = getOrderPointer(volunteer->getCompletedOrderId());
+            if (supplyRequest->getStatus() == RequestStatus::COLLECTING)
+            {
+                pendingRequests.push_back(supplyRequest);
+                auto it = std::find(pendingRequests.begin(), pendingRequests.end(), supplyRequest);
+                         if (it != pendingRequests.end())
+                         {
+                                pendingRequests.erase(it);
+                         }
+                volunteer->setCompletedOrderId(NO_ORDER);
+            }
+
+            else if (supplyRequest->getStatus() == RequestStatus::ON_THE_WAY)
+            {
+                completedRequests.push_back(supplyRequest);
+                 auto it = std::find(pendingRequests.begin(), pendingRequests.end(), supplyRequest);
+                         if (it != pendingRequests.end())
+                         {
+                                pendingRequests.erase(it);
+                         }
+                supplyRequest->setStatus(RequestStatus::DONE);
+                volunteer->isBusy(false);
+            }
+
+            else
+            {
+                std::cout << supplyRequest->toString() << std::endl;
+                std::cout << volunteer->toString() << std::endl;
+                std::cout << "Request of illegal type in inProcessOrders / WH " << __LINE__ << std::endl;
+                throw;
+            }
+        }
+
+    // step 4
+    n = volunteers.size();
+    Volunteer **volArray = new Volunteer *[n];
+
+    for (int i = 0; i < n; i++)
+        volArray[i] = volunteers[i];
+
+    for (int i = 0; i < n; i++)
+    {
+        Volunteer *volunteer = volArray[i];
+        if (!volunteer->() && !volunteer->isBusy())
+        {
+            auto it = std::find(pendingRequests.begin(), pendingRequests.end(), supplyRequest);
+                         if (it != pendingRequests.end())
+                         {
+                                pendingRequests.erase(it);
+                         }
+            delete volunteer;
+        }
+    }
+
+    delete[] requestArray;
+    delete[] volArray;
+>>>>>>> 8d389ed (stimulate berger)
 }
