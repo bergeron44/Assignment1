@@ -22,12 +22,8 @@ class MedicalWareHouse {
         Beneficiary &getBeneficiary(int beneficiaryId) const;
         Volunteer &getVolunteer(int volunteerId) const;
         SupplyRequest &getRequest(int requestId) const;
-<<<<<<< HEAD
         bool registerBeneficiary(const string &name, beneficiaryType type, int distance, int max_request);
-=======
-        bool registerBeneficiary(const string &name, beneficiaryType type, int distance, int max_request) const;
         void MedicalWareHouse::simulateStep() ;     
->>>>>>> d2d86ce (comit simulTE STEP)
         const vector<CoreAction*> &getActions() const;
         void close();
         void open();
