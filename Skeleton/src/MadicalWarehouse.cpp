@@ -27,35 +27,6 @@ int toInt(string str)
     return num;
 }
 
-void MedicalWareHouse::close()
-{
-    isOpen = false;
-}
-
-void MedicalWareHouse::open()
-{
-    isOpen = true;
-}
-
-void MedicalWareHouse::start()
-{
-    open();
-    std::cout << "Warehouse is open!" << std::endl;
-
-    string inputString;
-    const vector<CoreAction*> a=getActions();
-    int i=0;
-    while (isOpen)
-    {
-        std::getline(std::cin, inputString);
-        CoreAction *action = a[i];
-        if (action!=nullptr)
-            action->act(*this);
-
-        i++;
-    }
-}
-
 MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
 {
     std::ifstream configFile(configFilePath);
@@ -84,7 +55,7 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
             iss >> location_distance;
             iss >> max_requests;
             RegisterBeneficiary* beneficiary=new RegisterBeneficiary(beneficiary_name, facility_type,toInt(location_distance),toInt(max_requests));
-            actionsLog.push_back(beneficiary);
+            beneficiary->act(*this);
             // if (facility_type == "hospital")
             // {
             //     HospitalBeneficiary *hospitalBeneficiary = new HospitalBeneficiary(beneficiaryCounter, beneficiary_name, toInt(location_distance), toInt(max_requests));
@@ -132,6 +103,25 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
     configFile.close();
 }
 
+void MedicalWareHouse::start()
+{
+    open();
+    std::cout << "Warehouse is open!" << std::endl;
+
+    string inputString;
+    const vector<CoreAction*> a=getActions();
+    int i=0;
+    while (isOpen)
+    {
+        std::getline(std::cin, inputString);
+        CoreAction *action = a[i];
+        if (action!=nullptr)
+            action->act(*this);
+
+        i++;
+    }
+}
+
 Beneficiary &MedicalWareHouse::getBeneficiary(int beneficiaryId) const
 {
     for (const auto &beneficiary : Beneficiaries)
@@ -161,21 +151,6 @@ const vector<CoreAction *> &MedicalWareHouse::getActions() const
     return actionsLog;
 }
 
-const vector<Volunteer *> &MedicalWareHouse::getVolunteers() const
-{
-    return volunteers;
-}
-
-const vector<Beneficiary *> &MedicalWareHouse::getBeneficiaries() const
-{
-    return Beneficiaries;
-}
-
-int MedicalWareHouse::getNewRequestId() const
-{
-    return pendingRequests.size() + inProcessRequests.size() + completedRequests.size();
-}
-
 SupplyRequest &MedicalWareHouse::getRequest(int requestId) const
 {
     for (SupplyRequest *request : pendingRequests)
@@ -190,4 +165,14 @@ SupplyRequest &MedicalWareHouse::getRequest(int requestId) const
         if (request->getId() == requestId)
             return *request;
     throw std::runtime_error("Request with ID " + std::to_string(requestId) + " not found.");
+}
+
+void MedicalWareHouse::close()
+{
+    isOpen = false;
+}
+
+void MedicalWareHouse::open()
+{
+    isOpen = true;
 }
