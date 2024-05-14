@@ -27,14 +27,6 @@ SimulateStep::SimulateStep(int numOfSteps) : CoreAction(), numOfSteps(numOfSteps
 
 void SimulateStep::act(MedicalWareHouse &medWareHouse) {
     //step the volunteers
-    vector<Volunteer*> volunteers=medWareHouse.getVolunteers();
-    int length=volunteers.size();
-    for (const auto &volunteer : volunteers)
-    {
-        for (int i = 0; i < numOfSteps; ++i) {
-            volunteer->step();
-        }    
-    }
     complete();
 }
 

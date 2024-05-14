@@ -21,8 +21,7 @@ class MedicalWareHouse {
         Beneficiary &getBeneficiary(int beneficiaryId) const;
         Volunteer &getVolunteer(int volunteerId) const;
         SupplyRequest &getRequest(int requestId) const;
-        bool registerBeneficiary(const string &name, beneficiaryType type, int distance, int max_request) const;
-        bool simulateVolunteers() const;
+        bool registerBeneficiary(const string &name, beneficiaryType type, int distance, int max_request);
         const vector<CoreAction*> &getActions() const;
         void close();
         void open();

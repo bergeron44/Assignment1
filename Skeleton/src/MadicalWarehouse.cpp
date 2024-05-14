@@ -54,7 +54,7 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
             iss >> facility_type;
             iss >> location_distance;
             iss >> max_requests;
-            RegisterBeneficiary* beneficiary=new RegisterBeneficiary(beneficiary_name, facility_type,toInt(location_distance),toInt(max_requests));
+            RegisterBeneficiary *beneficiary = new RegisterBeneficiary(beneficiary_name, facility_type, toInt(location_distance), toInt(max_requests));
             beneficiary->act(*this);
             // if (facility_type == "hospital")
             // {
@@ -109,13 +109,13 @@ void MedicalWareHouse::start()
     std::cout << "Warehouse is open!" << std::endl;
 
     string inputString;
-    const vector<CoreAction*> a=getActions();
-    int i=0;
+    const vector<CoreAction *> a = getActions();
+    int i = 0;
     while (isOpen)
     {
         std::getline(std::cin, inputString);
         CoreAction *action = a[i];
-        if (action!=nullptr)
+        if (action != nullptr)
             action->act(*this);
 
         i++;
@@ -162,8 +162,26 @@ SupplyRequest &MedicalWareHouse::getRequest(int requestId) const
     throw std::runtime_error("Request with ID " + std::to_string(requestId) + " not found.");
 }
 
-bool MedicalWareHouse:: registerBeneficiary(const string &name, beneficiaryType type, int distance, int max_request) const{
-    Beneficiary 
+bool MedicalWareHouse::registerBeneficiary(const string &name, beneficiaryType type, int distance, int max_request)
+{
+    switch (type)
+    {
+    case beneficiaryType::Hospital:
+        HospitalBeneficiary *newBen = new HospitalBeneficiary(beneficiaryCounter, name, distance, max_request);
+        Beneficiaries.push_back(newBen);
+        beneficiaryCounter++;
+        return true;
+
+    case beneficiaryType::Clinic:
+        ClinicBeneficiary *newBen = new ClinicBeneficiary(beneficiaryCounter, name, distance, max_request);
+        Beneficiaries.push_back(newBen);
+        beneficiaryCounter++;
+        return true;
+
+    default:
+        // This should never happen
+        return false;
+    }
 }
 
 const vector<CoreAction *> &MedicalWareHouse::getActions() const
