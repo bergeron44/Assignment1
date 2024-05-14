@@ -198,3 +198,8 @@ void MedicalWareHouse::open()
 {
     isOpen = true;
 }
+
+void MedicalWareHouse::simulateStep()
+{
+   
+}

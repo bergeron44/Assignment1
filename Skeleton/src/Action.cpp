@@ -26,7 +26,21 @@ string CoreAction::getErrorMsg() const {
 SimulateStep::SimulateStep(int numOfSteps) : CoreAction(), numOfSteps(numOfSteps) {}
 
 void SimulateStep::act(MedicalWareHouse &medWareHouse) {
+<<<<<<< HEAD
     //step the volunteers
+=======
+    medWareHouse.addAction(this);
+
+    if (numOfSteps <= 0)
+    {
+        error("Number of steps must be positive!");
+        return;
+    }
+
+    for (int i = 0; i < numOfSteps; i++)
+        medWareHouse.simulateStep();
+
+>>>>>>> d2d86ce (comit simulTE STEP)
     complete();
 }
 
@@ -68,7 +82,7 @@ void AddRequset::act(MedicalWareHouse &medWareHouse)
     Beneficiary &Beneficiary = medWareHouse.getBeneficiary(beneficiaryId);
     if (Beneficiary.getId() == -1)//pay attention when we write the getBeneficiary
     {
-        error("Customer does not exist");
+        error("beneficiary does not exist");
         return;
     }
 
@@ -78,14 +92,8 @@ void AddRequset::act(MedicalWareHouse &medWareHouse)
         return;
     }
 
-    SupplyRequest *SupplyRequest = new SupplyRequest(medWareHouse.getNewSupplyRequestId(), beneficiaryId, Beneficiary.getBeneficiaryDistance());
-
-    medWareHouse.SupplyRequest(SupplyRequest);
-    if (Beneficiary.SupplyRequest(SupplyRequest->getId()) == -1)
-    {
-        error("FATAL @ AddOrder::Act");
-        return;
-    }
+    medWareHouse.addRequestAct(beneficiaryId,Beneficiary.getBeneficiaryDistance());
+  
     complete();
 }
 
