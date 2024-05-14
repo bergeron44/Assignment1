@@ -144,23 +144,7 @@ void RegisterBeneficiary::act(MedicalWareHouse &medWareHouse) {
         error("Max orders must be positive");
         return;
     }
-
-    Beneficiary *Beneficiary;
-    switch (beneficiaryType)
-    {
-    case beneficiaryType::Hospital:
-        Beneficiary = new HospitalBeneficiary(medWareHouse.getNewBeneficiaryId(), beneficiaryName, distance, maxRequests);
-        break;
-
-    case beneficiaryType::Clinic:
-        Beneficiary = new ClinicBeneficiary(medWareHouse.getNewBeneficiaryId(), beneficiaryName, distance, maxRequests);
-        break;
-
-    default:
-        // This should never happen
-        return;
-    }
-    medWareHouse.AddBeneficiary(Beneficiary);
+    medWareHouse.registerBeneficiary(beneficiaryName, beneficiaryType, distance, maxRequests);
     complete();
 }
 

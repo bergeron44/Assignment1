@@ -146,11 +146,6 @@ Volunteer &MedicalWareHouse::getVolunteer(int volunteerId) const
     throw std::runtime_error("Volunteer with ID " + std::to_string(volunteerId) + " not found.");
 }
 
-const vector<CoreAction *> &MedicalWareHouse::getActions() const
-{
-    return actionsLog;
-}
-
 SupplyRequest &MedicalWareHouse::getRequest(int requestId) const
 {
     for (SupplyRequest *request : pendingRequests)
@@ -165,6 +160,15 @@ SupplyRequest &MedicalWareHouse::getRequest(int requestId) const
         if (request->getId() == requestId)
             return *request;
     throw std::runtime_error("Request with ID " + std::to_string(requestId) + " not found.");
+}
+
+bool MedicalWareHouse:: registerBeneficiary(const string &name, beneficiaryType type, int distance, int max_request) const{
+    Beneficiary 
+}
+
+const vector<CoreAction *> &MedicalWareHouse::getActions() const
+{
+    return actionsLog;
 }
 
 void MedicalWareHouse::close()
