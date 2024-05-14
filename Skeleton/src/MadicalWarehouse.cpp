@@ -138,6 +138,18 @@ void MedicalWareHouse::addRequest(SupplyRequest *request)
     }
 }
 
+void MedicalWareHouse::addRequestAct(int beneficiaryId, int distance)
+{
+    int id = pendingRequests.size() + inProcessRequests.size() + completedRequests.size();
+    SupplyRequest *request = new SupplyRequest(id, beneficiaryId, distance);
+    addRequest(request);
+}
+
+void MedicalWareHouse::addAction(CoreAction *action)
+{
+    actionsLog.push_back(action);
+}
+
 Beneficiary &MedicalWareHouse::getBeneficiary(int beneficiaryId) const
 {
     for (const auto &beneficiary : Beneficiaries)
