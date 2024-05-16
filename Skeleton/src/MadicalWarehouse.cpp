@@ -236,9 +236,6 @@ void eraseElement(std::vector<T> &vec, const T &element)
         vec.erase(it);
     delete element;
 }
-
-
-
 ////////
 //end help function
 ///////
@@ -268,6 +265,7 @@ void MedicalWareHouse::updateRequestForVolunteer()
                         supplyRequest->setInventoryManagerId(volunteer->getId());
                         inProcessRequests.push_back(supplyRequest);
                         pendingRequests.pop_back();
+                        eraseElement(pendingRequests, supplyRequest);
                     }
         }
     }
