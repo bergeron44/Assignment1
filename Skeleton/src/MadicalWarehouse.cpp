@@ -159,7 +159,7 @@ Beneficiary &MedicalWareHouse::getBeneficiary(int beneficiaryId) const
             return *beneficiary;
         }
     }
-    throw std::runtime_error("Beneficiary with ID " + std::to_string(beneficiaryId) + " not found.");
+    throw std::runtime_error("Beneficiary does not exist.");
 }
 
 Volunteer &MedicalWareHouse::getVolunteer(int volunteerId) const
@@ -187,7 +187,7 @@ SupplyRequest &MedicalWareHouse::getRequest(int requestId) const
     for (SupplyRequest *request : completedRequests)
         if (request->getId() == requestId)
             return *request;
-    throw std::runtime_error("Request with ID " + std::to_string(requestId) + " not found.");
+    throw std::runtime_error("Request does not exist.");
 }
 
 bool MedicalWareHouse::registerBeneficiary(const string &name, beneficiaryType type, int distance, int max_request)
@@ -289,3 +289,67 @@ void MedicalWareHouse::updateRequestForVolunteer()
 }
 
 
+<<<<<<< Updated upstream
+=======
+    // step 3
+    for (Volunteer *volunteer : volunteers)
+        if (!volunteer->isBusy() && volunteer->getCompletedOrderId() != NO_ORDER)
+        {
+            SupplyRequest *supplyRequest = getOrderPointer(volunteer->getCompletedOrderId());
+            if (supplyRequest->getStatus() == RequestStatus::COLLECTING)
+            {
+                pendingRequests.push_back(supplyRequest);
+                auto it = std::find(pendingRequests.begin(), pendingRequests.end(), supplyRequest);
+                         if (it != pendingRequests.end())
+                         {
+                                pendingRequests.erase(it);
+                         }
+                volunteer->setCompletedOrderId(NO_ORDER);
+            }
+
+            else if (supplyRequest->getStatus() == RequestStatus::ON_THE_WAY)
+            {
+                completedRequests.push_back(supplyRequest);
+                 auto it = std::find(pendingRequests.begin(), pendingRequests.end(), supplyRequest);
+                         if (it != pendingRequests.end())
+                         {
+                                pendingRequests.erase(it);
+                         }
+                supplyRequest->setStatus(RequestStatus::DONE);
+                volunteer->isBusy(false);
+            }
+
+            else
+            {
+                std::cout << supplyRequest->toString() << std::endl;
+                std::cout << volunteer->toString() << std::endl;
+                std::cout << "Request of illegal type in inProcessOrders / WH " << __LINE__ << std::endl;
+                throw;
+            }
+        }
+
+    // step 4
+    n = volunteers.size();
+    Volunteer **volArray = new Volunteer *[n];
+
+    for (int i = 0; i < n; i++)
+        volArray[i] = volunteers[i];
+
+    for (int i = 0; i < n; i++)
+    {
+        Volunteer *volunteer = volArray[i];
+        if (!volunteer->() && !volunteer->isBusy())
+        {
+            auto it = std::find(pendingRequests.begin(), pendingRequests.end(), supplyRequest);
+                         if (it != pendingRequests.end())
+                         {
+                                pendingRequests.erase(it);
+                         }
+            delete volunteer;
+        }
+    }
+
+    delete[] requestArray;
+    delete[] volArray;
+}
+>>>>>>> Stashed changes
