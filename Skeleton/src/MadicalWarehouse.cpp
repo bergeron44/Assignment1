@@ -240,7 +240,7 @@ void eraseElement(std::vector<T> &vec, const T &element)
     delete element;
 }
 
-int getLastRequestId()
+int MedicalWareHouse::getLastRequestId()
 {
      int maxID = 0;
     
