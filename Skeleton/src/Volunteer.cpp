@@ -5,6 +5,7 @@
 #include <sstream>
 #include <iostream>
 #include <stdexcept>
+#include <cmath>
 
 Volunteer::Volunteer(int id, const string &name)
     : id(id),
@@ -111,20 +112,24 @@ void InventoryManagerVolunteer::acceptRequest(const SupplyRequest &request)
 // override func:
 string InventoryManagerVolunteer::toString() const
 {
-    string str = "Volunteer ID: " + std::to_string(this->getId());
+    string str = "|Volunteer ID: " + std::to_string(this->getId());
     if (this->isBusy() == true)
     {
-        str = str + "|IsBusy: True |RequestID: " + std::to_string(this->getActiveRequestId());
+        str = str + "|IsBusy: True|RequestID: " + std::to_string(this->getActiveRequestId());
         if (this->hasRequestsLeft())
         {
-            str=str+ "|TimeLeft: " << ((InventoryManagerVolunteer)volunteer).getTimeLeft() << std::endl;
+            str = str + "|TimeLeft: " + std::to_string(getTimeLeft()) + "|";
         }
     }
     else
     {
-        std::cout << "IsBusy: " << "False" << std::endl;
+        str = str + "|IsBusy: False";
+        if (this->hasRequestsLeft())
+        {
+            str = str + "|TimeLeft: " + std::to_string(getTimeLeft()) + "|";
+        }
     }
-}
+    return str;
 }
 
 // CourierVolunteer
@@ -212,7 +217,35 @@ void CourierVolunteer::step()
     }
 }
 
+int divideAndRoundUp(int dividend, int divisor) {
+    if (divisor == 0) {
+        throw std::invalid_argument("Divisor cannot be zero");
+    }
+
+    double result = static_cast<double>(dividend) / divisor;
+
+    return static_cast<int>(std::ceil(result));
+}
+
 // override func:
 string CourierVolunteer::toString() const
 {
+    string str = "|Volunteer ID: " + std::to_string(this->getId());
+    if (this->isBusy() == true)
+    {
+        str = str + "|IsBusy: True|RequestID: " + std::to_string(this->getActiveRequestId());
+        if (this->hasRequestsLeft())
+        {
+            str = str + "|TimeLeft: " + std::to_string(divideAndRoundUp(distanceLeft, distancePerStep)) + "|";
+        }
+    }
+    else
+    {
+        str = str + "|IsBusy: False";
+        if (this->hasRequestsLeft())
+        {
+            str = str + "|TimeLeft: " + std::to_string(divideAndRoundUp(distanceLeft, distancePerStep)) + "|";
+        }
+    }
+    return str;
 }

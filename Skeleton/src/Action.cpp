@@ -185,12 +185,17 @@ beneficiaryType stringToBeneficiaryType(const string &ct)
         return beneficiaryType::Clinic;
 }
 
-void printWithNewLines(const std::string& str) {
-    for (char c : str) {
-        if (c == '|') {
-            std::cout << std::endl; 
-        } else {
-            std::cout << c; 
+void printWithNewLines(const std::string &str)
+{
+    for (char c : str)
+    {
+        if (c == '|')
+        {
+            std::cout << std::endl;
+        }
+        else
+        {
+            std::cout << c;
         }
     }
 }
@@ -230,17 +235,7 @@ void PrintRequestStatus::act(MedicalWareHouse &medWareHouse)
     try
     {
         SupplyRequest &request = medWareHouse.getRequest(requestId);
-        std::cout << "Request ID: " << requestId << std::endl;
-        std::cout << "Status: " << statusRequestToString(request.getStatus()) << std::endl;
-        std::cout << "Beneficiary ID: " << request.getBeneficiaryId() << std::endl;
-        if (request.getStatus() != RequestStatus::PENDING)
-        {
-            std::cout << "Inventory Manager: " << request.getInventoryManagerId() << std::endl;
-        }
-        if (request.getStatus() != RequestStatus::PENDING || request.getStatus() != RequestStatus::COLLECTING)
-        {
-            std::cout << "Courier: " << request.getCourierId() << std::endl;
-        }
+        printWithNewLines(request.toString());
     }
     catch (const std::exception &e)
     {
@@ -300,20 +295,7 @@ void PrintVolunteerStatus::act(MedicalWareHouse &medWareHouse)
     try
     {
         Volunteer &volunteer = medWareHouse.getVolunteer(volunteerId);
-        std::cout << "Volunteer ID: " << volunteerId << std::endl;
-        if (volunteer.isBusy() == true)
-        {
-            std::cout << "IsBusy: " << "True" << std::endl;
-            std::cout << "RequestID: " << volunteer.getActiveRequestId() << std::endl;
-            if (volunteer.getType() == 0)
-            {
-                std::cout << "Requests Left: " << ((InventoryManagerVolunteer)volunteer).getTimeLeft() << std::endl;
-            }
-        }
-        else
-        {
-            std::cout << "IsBusy: " << "False" << std::endl;
-        }
+        printWithNewLines(volunteer.toString());
     }
     catch (const std::exception &e)
     {

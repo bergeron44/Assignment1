@@ -73,9 +73,14 @@ int SupplyRequest::getDistance() const
 
 const string SupplyRequest::toString() const // the stracture is:<requestID> <beneficiaryID> <distance> <status> <inventoryManagerID> <CourierID>
 {
-    string str = std::to_string(id) + " " + std::to_string(beneficiaryId) + " " + std::to_string(distance) +
-                 " " + RequestStatusToString(status) +
-                 " " + std::to_string(inventoryManagerId) +
-                 " " + std::to_string(CourierId);
+    string str = "|Request ID: " + std::to_string(id) + "|Status: " + RequestStatusToString(status) + "|Beneficiary ID: " + std::to_string(beneficiaryId);
+    if (status != RequestStatus::PENDING)
+    {
+        str = str + "|Inventory Manager: " + std::to_string(getInventoryManagerId()) + "|";
+    }
+    if (status != RequestStatus::PENDING || status != RequestStatus::COLLECTING)
+    {
+        str=str+ "Courier: " + std::to_string(getCourierId()) + "|";
+    }
     return str;
 }
