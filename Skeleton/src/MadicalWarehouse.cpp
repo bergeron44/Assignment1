@@ -176,6 +176,8 @@ Volunteer &MedicalWareHouse::getVolunteer(int volunteerId) const
 
 SupplyRequest &MedicalWareHouse::getRequest(int requestId) const
 {
+
+    SupplyRequest *backRequest = new SupplyRequest(-1,-1,-1);
     for (SupplyRequest *request : pendingRequests)
         if (request->getId() == requestId)
             return *request;
@@ -187,7 +189,8 @@ SupplyRequest &MedicalWareHouse::getRequest(int requestId) const
     for (SupplyRequest *request : completedRequests)
         if (request->getId() == requestId)
             return *request;
-    throw std::runtime_error("Request does not exist.");
+        return *backRequest;
+
 }
 
 bool MedicalWareHouse::registerBeneficiary(const string &name, beneficiaryType type, int distance, int max_request)
@@ -235,6 +238,26 @@ void eraseElement(std::vector<T> &vec, const T &element)
     if (it != vec.end())
         vec.erase(it);
     delete element;
+}
+
+int getLastRequestId()
+{
+     int maxID = 0;
+    
+    // Combine all vectors into a single vector
+    std::vector<SupplyRequest*> allRequests;
+    allRequests.insert(allRequests.end(), pendingRequests.begin(), pendingRequests.end());
+    allRequests.insert(allRequests.end(), inProcessRequests.begin(), inProcessRequests.end());
+    allRequests.insert(allRequests.end(), completedRequests.begin(), completedRequests.end());
+
+    // Iterate over the combined vector to find the maximum ID
+    for (SupplyRequest* request : allRequests) {
+        if (request->getId() > maxID) {
+            maxID = request->getId();
+        }
+    }
+
+    return maxID;      
 }
 ////////
 //end help function

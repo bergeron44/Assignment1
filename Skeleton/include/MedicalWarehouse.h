@@ -29,6 +29,7 @@ class MedicalWareHouse {
         void open();
         //we add this help function
         void MedicalWareHouse::updateRequestForVolunteer();
+        int getLastRequestId();
 
 
     private:
