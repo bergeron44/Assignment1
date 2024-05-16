@@ -56,17 +56,6 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
             iss >> max_requests;
             RegisterBeneficiary *beneficiary = new RegisterBeneficiary(beneficiary_name, facility_type, toInt(location_distance), toInt(max_requests));
             beneficiary->act(*this);
-            // if (facility_type == "hospital")
-            // {
-            //     HospitalBeneficiary *hospitalBeneficiary = new HospitalBeneficiary(beneficiaryCounter, beneficiary_name, toInt(location_distance), toInt(max_requests));
-            //     Beneficiaries.push_back(hospitalBeneficiary);
-            // }
-            // else
-            // {
-            //     ClinicBeneficiary *clinicBeneficiary = new ClinicBeneficiary(beneficiaryCounter, beneficiary_name, toInt(location_distance), toInt(max_requests));
-            //     Beneficiaries.push_back(clinicBeneficiary);
-            // }
-            // beneficiaryCounter++;
         }
         else if (word == "volunteer")
         {

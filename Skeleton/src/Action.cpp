@@ -363,6 +363,43 @@ string PrintVolunteerStatus::toString() const
     return name + " " + args + " " + s;
 }
 
+Close::Close() : CoreAction() {}
+
+void Close::act(MedicalWareHouse &medWareHouse)
+{
+    medWareHouse.addAction(this);
+    int numberOfRequest = medWareHouse.getLastRequestId();
+    for (int i = 0; i < numberOfRequest; i++)
+        if (medWareHouse.getRequest(i).getId() != -1)
+        {
+            std::cout << medWareHouse.getRequest(i).toString() << std::endl;
+        }
+
+    medWareHouse.close();
+    complete();
+}
+
+Close *Close::clone() const
+{
+    return new Close(*this);
+}
+
+string Close::toString() const
+{
+    string name = "Close";
+    string s = "";
+    if (this->getStatus() == ActionStatus::ERROR)
+    {
+        s = "ERROR";
+    }
+
+    else
+    {
+        s = "COMPLETED";
+    }
+    return name + " " + s;
+}
+
 PrintActionsLog::PrintActionsLog() {}
 
 void PrintActionsLog::act(MedicalWareHouse &medWareHouse)
