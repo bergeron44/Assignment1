@@ -195,6 +195,7 @@ string BeneficiaryTypeToString(beneficiaryType ct)
         return "Clinic";
 }
 
+<<<<<<< HEAD
 PrintRequestStatus::PrintRequestStatus(int id)
     : requestId(id) {}
 
@@ -321,3 +322,6 @@ string PrintVolunteerStatus::toString() const
 {
     return "PrintVolunteerStatus";
 }
+=======
+}
+>>>>>>> 16b6ee0 (com)
