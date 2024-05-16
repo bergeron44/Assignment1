@@ -5,28 +5,33 @@
 
 CoreAction::CoreAction() : status(ActionStatus::ERROR) {}
 
-ActionStatus CoreAction::getStatus() const {
+ActionStatus CoreAction::getStatus() const
+{
     return status;
 }
 
-void CoreAction::complete() {
+void CoreAction::complete()
+{
     status = ActionStatus::COMPLETED;
 }
 
-void CoreAction::error(string errorMsg) {
+void CoreAction::error(string errorMsg)
+{
     status = ActionStatus::ERROR;
     this->errorMsg = std::move(errorMsg);
 }
 
-string CoreAction::getErrorMsg() const {
+string CoreAction::getErrorMsg() const
+{
     return errorMsg;
 }
 
 // Implementation of SimulateStep class
 SimulateStep::SimulateStep(int numOfSteps) : CoreAction(), numOfSteps(numOfSteps) {}
 
-void SimulateStep::act(MedicalWareHouse &medWareHouse) {
-    //step the volunteers
+void SimulateStep::act(MedicalWareHouse &medWareHouse)
+{
+    // step the volunteers
     medWareHouse.addAction(this);
 
     if (numOfSteps <= 0)
@@ -41,25 +46,26 @@ void SimulateStep::act(MedicalWareHouse &medWareHouse) {
     complete();
 }
 
-
-std::string SimulateStep::toString() const {
-     string name = "SimulateStep";
+std::string SimulateStep::toString() const
+{
+    string name = "SimulateStep";
     string args = std::to_string(numOfSteps);
-    string s ;
-      if (this->getStatus() == ActionStatus::ERROR)
-      {
-        s= "ERROR";
-      }
+    string s;
+    if (this->getStatus() == ActionStatus::ERROR)
+    {
+        s = "ERROR";
+    }
 
-      else
-      {
-        s="COMPLETED";
-      }
-      
+    else
+    {
+        s = "COMPLETED";
+    }
+
     return name + " " + args + " " + s;
 }
 
-SimulateStep* SimulateStep::clone() const {
+SimulateStep *SimulateStep::clone() const
+{
     return new SimulateStep(*this);
 }
 
@@ -77,7 +83,7 @@ void AddRequset::act(MedicalWareHouse &medWareHouse)
     }
 
     Beneficiary &Beneficiary = medWareHouse.getBeneficiary(beneficiaryId);
-    if (Beneficiary.getId() == -1)//pay attention when we write the getBeneficiary
+    if (Beneficiary.getId() == -1) // pay attention when we write the getBeneficiary
     {
         error("beneficiary does not exist");
         return;
@@ -89,8 +95,8 @@ void AddRequset::act(MedicalWareHouse &medWareHouse)
         return;
     }
 
-    medWareHouse.addRequestAct(beneficiaryId,Beneficiary.getBeneficiaryDistance());
-  
+    medWareHouse.addRequestAct(beneficiaryId, Beneficiary.getBeneficiaryDistance());
+
     complete();
 }
 
@@ -98,16 +104,16 @@ string AddRequset::toString() const
 {
     string name = "AddOrder";
     string args = std::to_string(beneficiaryId);
-    string s ;
-      if (this->getStatus() == ActionStatus::ERROR)
-      {
-        s= "ERROR";
-      }
+    string s;
+    if (this->getStatus() == ActionStatus::ERROR)
+    {
+        s = "ERROR";
+    }
 
-      else
-      {
-        s="COMPLETED";
-      }
+    else
+    {
+        s = "COMPLETED";
+    }
     return name + " " + args + " " + s;
 }
 
@@ -117,14 +123,14 @@ AddRequset *AddRequset::clone() const
 }
 
 // Implementation of RegisterBeneficiary class
-RegisterBeneficiary::RegisterBeneficiary(const string &beneficiaryName, const string &beneficiaryType, int distance, int maxRequests) 
-    : CoreAction() , beneficiaryName(beneficiaryName), beneficiaryType(stringToBeneficiaryType(beneficiaryType)), distance(distance), maxRequests(maxRequests) {}
+RegisterBeneficiary::RegisterBeneficiary(const string &beneficiaryName, const string &beneficiaryType, int distance, int maxRequests)
+    : CoreAction(), beneficiaryName(beneficiaryName), beneficiaryType(stringToBeneficiaryType(beneficiaryType)), distance(distance), maxRequests(maxRequests) {}
 
-void RegisterBeneficiary::act(MedicalWareHouse &medWareHouse) {
+void RegisterBeneficiary::act(MedicalWareHouse &medWareHouse)
+{
     medWareHouse.addAction(this);
 
-    if ((beneficiaryType != beneficiaryType::Clinic && beneficiaryType != beneficiaryType::Hospital)
-)
+    if ((beneficiaryType != beneficiaryType::Clinic && beneficiaryType != beneficiaryType::Hospital))
     {
         error("Invalid customer type");
         return;
@@ -145,37 +151,38 @@ void RegisterBeneficiary::act(MedicalWareHouse &medWareHouse) {
     complete();
 }
 
-RegisterBeneficiary* RegisterBeneficiary::clone() const {
+RegisterBeneficiary *RegisterBeneficiary::clone() const
+{
     return new RegisterBeneficiary(*this);
 }
 
-string RegisterBeneficiary::toString() const {
-     string name = "AddBeneficiary";
+string RegisterBeneficiary::toString() const
+{
+    string name = "AddBeneficiary";
     string args = beneficiaryName + " " + BeneficiaryTypeToString(beneficiaryType) + " " + std::to_string(distance) + " " + std::to_string(maxRequests);
-    string s ="";
-       if (this->getStatus() == ActionStatus::ERROR)
-      {
-        s= "ERROR";
-      }
+    string s = "";
+    if (this->getStatus() == ActionStatus::ERROR)
+    {
+        s = "ERROR";
+    }
 
-      else
-      {
-        s="COMPLETED";
-      }
-   
+    else
+    {
+        s = "COMPLETED";
+    }
+
     return name + " " + args + " " + s;
 }
 
-//help function
-// helper function I -> string to CustomerType enum
+// help function
+//  helper function I -> string to CustomerType enum
 beneficiaryType stringToBeneficiaryType(const string &ct)
 {
     if (ct == "Hospital")
         return beneficiaryType::Hospital;
 
-    else 
+    else
         return beneficiaryType::Clinic;
-
 }
 
 // helper function II -> CustomerType enum to string
@@ -184,7 +191,133 @@ string BeneficiaryTypeToString(beneficiaryType ct)
     if (ct == beneficiaryType::Hospital)
         return "Hospital";
 
-    else 
+    else
         return "Clinic";
+}
 
+PrintRequestStatus::PrintRequestStatus(int id)
+    : requestId(id) {}
+
+string statusRequestToString(RequestStatus request)
+{
+    switch (request)
+    {
+    case RequestStatus::PENDING:
+        return "PENDING";
+
+    case RequestStatus::COLLECTING:
+        return "COLLECTING";
+
+    case RequestStatus::ON_THE_WAY:
+        return "ON_THE_WAY";
+
+    default:
+        return "DONE";
+    }
+}
+
+void PrintRequestStatus::act(MedicalWareHouse &medWareHouse)
+{
+    try
+    {
+        SupplyRequest &request = medWareHouse.getRequest(requestId);
+        std::cout << "Request ID: " << requestId << std::endl;
+        std::cout << "Status: " << statusRequestToString(request.getStatus()) << std::endl;
+        std::cout << "Beneficiary ID: " << request.getBeneficiaryId() << std::endl;
+        if (request.getStatus() != RequestStatus::PENDING)
+        {
+            std::cout << "Inventory Manager: " << request.getInventoryManagerId() << std::endl;
+        }
+        if (request.getStatus() != RequestStatus::PENDING || request.getStatus() != RequestStatus::COLLECTING)
+        {
+            std::cout << "Courier: " << request.getCourierId() << std::endl;
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cout << "Request does not exist." << std::endl;
+    }
+}
+
+PrintRequestStatus *PrintRequestStatus::clone() const
+{
+    return new PrintRequestStatus(*this);
+}
+
+string PrintRequestStatus::toString() const
+{
+    return "PrintRequestStatus";
+}
+
+PrintBeneficiaryStatus::PrintBeneficiaryStatus(int BeneficiaryId)
+    : beneficiaryId(BeneficiaryId) {}
+
+void PrintBeneficiaryStatus::act(MedicalWareHouse &medWareHouse)
+{
+    try
+    {
+        Beneficiary &beneficiary = medWareHouse.getBeneficiary(beneficiaryId);
+        std::cout << "Beneficiary ID: " << beneficiaryId << std::endl;
+        vector<int> requests = beneficiary.getRequestsIds();
+        for (auto id : requests)
+        {
+            std::cout << "Request ID: " << id << std::endl;
+            SupplyRequest &request = medWareHouse.getRequest(id);
+            std::cout << "Status: " << statusRequestToString(request.getStatus()) << std::endl;
+        }
+        std::cout << "Requests Left: " << beneficiary.getNumRequests() << std::endl;
+    }
+    catch (const std::exception &e)
+    {
+        std::cout << "Beneficiary does not exist." << std::endl;
+    }
+}
+
+PrintBeneficiaryStatus *PrintBeneficiaryStatus::clone() const
+{
+    return new PrintBeneficiaryStatus(*this);
+}
+
+string PrintBeneficiaryStatus::toString() const
+{
+    return "PrintBeneficiaryStatus";
+}
+
+PrintVolunteerStatus::PrintVolunteerStatus(int id)
+    : volunteerId(id) {}
+
+void PrintVolunteerStatus::act(MedicalWareHouse &medWareHouse)
+{
+    try
+    {
+        Volunteer &volunteer = medWareHouse.getVolunteer(volunteerId);
+        std::cout << "Volunteer ID: " << volunteerId << std::endl;
+        if (volunteer.isBusy() == true)
+        {
+            std::cout << "IsBusy: " << "True" << std::endl;
+            std::cout << "RequestID: " << volunteer.getActiveRequestId() << std::endl;
+            if (volunteer.getType() == 0)
+            {
+                std::cout << "Requests Left: " << ((InventoryManagerVolunteer)volunteer).getTimeLeft() << std::endl;
+            }
+        }
+        else
+        {
+            std::cout << "IsBusy: " << "False" << std::endl;
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cout << "Volunteer does not exist." << std::endl;
+    }
+}
+
+PrintVolunteerStatus *PrintVolunteerStatus::clone() const
+{
+    return new PrintVolunteerStatus(*this);
+}
+
+string PrintVolunteerStatus::toString() const
+{
+    return "PrintVolunteerStatus";
 }

@@ -111,6 +111,20 @@ void InventoryManagerVolunteer::acceptRequest(const SupplyRequest &request)
 // override func:
 string InventoryManagerVolunteer::toString() const
 {
+    string str = "Volunteer ID: " + std::to_string(this->getId());
+    if (this->isBusy() == true)
+    {
+        str = str + "|IsBusy: True |RequestID: " + std::to_string(this->getActiveRequestId());
+        if (this->hasRequestsLeft())
+        {
+            str=str+ "|TimeLeft: " << ((InventoryManagerVolunteer)volunteer).getTimeLeft() << std::endl;
+        }
+    }
+    else
+    {
+        std::cout << "IsBusy: " << "False" << std::endl;
+    }
+}
 }
 
 // CourierVolunteer
