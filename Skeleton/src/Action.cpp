@@ -185,6 +185,15 @@ beneficiaryType stringToBeneficiaryType(const string &ct)
         return beneficiaryType::Clinic;
 }
 
+void printWithNewLines(const std::string& str) {
+    for (char c : str) {
+        if (c == '|') {
+            std::cout << std::endl; 
+        } else {
+            std::cout << c; 
+        }
+    }
+}
 // helper function II -> CustomerType enum to string
 string BeneficiaryTypeToString(beneficiaryType ct)
 {
@@ -195,7 +204,6 @@ string BeneficiaryTypeToString(beneficiaryType ct)
         return "Clinic";
 }
 
-<<<<<<< HEAD
 PrintRequestStatus::PrintRequestStatus(int id)
     : requestId(id) {}
 
@@ -322,6 +330,3 @@ string PrintVolunteerStatus::toString() const
 {
     return "PrintVolunteerStatus";
 }
-=======
-}
->>>>>>> 16b6ee0 (com)
