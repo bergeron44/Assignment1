@@ -27,6 +27,8 @@ class MedicalWareHouse {
         const vector<CoreAction*> &getActions() const;
         void close();
         void open();
+        //we add this help function
+        void MedicalWareHouse::updateRequestForVolunteer();
 
 
     private:
