@@ -6,31 +6,17 @@ CXX = g++
 # Compiler flags
 CXXFLAGS = -Wall -Wextra -std=c++11
 
+# Source directory
+SRC_DIR = src
+
+# Build directory
+BUILD_DIR = build
+
 # Source files
-SRCS = \
-    main.cpp \
-    CoreAction.cpp \
-    SimulateStep.cpp \
-    AddRequset.cpp \
-    RegisterBeneficiary.cpp \
-    PrintRequestStatus.cpp \
-    PrintBeneficiaryStatus.cpp \
-    PrintVolunteerStatus.cpp \
-    PrintActionsLog.cpp \
-    Close.cpp \
-    BackupWareHouse.cpp \
-    RestoreWareHouse.cpp \
-    Beneficiary.cpp \
-    HospitalBeneficiary.cpp \
-    ClinicBeneficiary.cpp \
-    MedicalWareHouse.cpp \
-    SupplyRequest.cpp \
-    Volunteer.cpp \
-    InventoryManagerVolunteer.cpp \
-    CourierVolunteer.cpp
+SRCS = $(wildcard $(SRC_DIR)/*.cpp)
 
 # Object files
-OBJS = $(SRCS:.cpp=.o)
+OBJS = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRCS))
 
 # Executable name
 TARGET = warehouse
@@ -39,10 +25,16 @@ TARGET = warehouse
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-    $(CXX) $(CXXFLAGS) -o $@ $^
+	@echo "Linking $(TARGET) from $(OBJS)"
+	$(CXX) $(CXXFLAGS) -o $@ $^
 
-%.o: %.cpp
-    $(CXX) $(CXXFLAGS) -c $< -o $@
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
+	@echo "Compiling $< to $@"
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(BUILD_DIR):
+	@mkdir -p $(BUILD_DIR)
 
 clean:
-    rm -f $(OBJS) $(TARGET)
+	@echo "Cleaning up..."
+	rm -f $(BUILD_DIR)/*.o $(TARGET)
