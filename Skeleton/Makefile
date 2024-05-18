@@ -17,8 +17,8 @@ SRCS = \
     $(SRC_DIR)/Beneficiary.cpp \
     $(SRC_DIR)/Volunteer.cpp \
     $(SRC_DIR)/SupplyRequest.cpp \
+	$(SRC_DIR)/MedicalWarehouse.cpp \
     $(SRC_DIR)/Action.cpp \
-    $(SRC_DIR)/MedicalWarehouse.cpp \
     $(SRC_DIR)/main.cpp
 
 # Object files
