@@ -1,17 +1,18 @@
 #ifndef MEDICALWAREHOUSE_H
 #define MEDICALWAREHOUSE_H
 
-#include "../include/MedicalWarehouse.h"
+#include "MedicalWarehouse.h"
 #include <fstream>
 #include <string>
 #include <vector>
 #include <sstream>
 #include <iostream>
 #include <stdexcept>
-#include "../include/Beneficiary.h"
-#include "../include/Volunteer.h"
-#include "../include/SupplyRequest.h"
-#include "../include/Action.h"
+#include <algorithm>
+#include "Beneficiary.h"
+#include "Volunteer.h"
+#include "SupplyRequest.h"
+#include "Action.h"
 
 int toInt(string str)
 {
@@ -58,8 +59,8 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
             iss >> facility_type;
             iss >> location_distance;
             iss >> max_requests;
+            std::cout<<beneficiary_name <<std::endl;
             RegisterBeneficiary *beneficiary = new RegisterBeneficiary(beneficiary_name, facility_type, toInt(location_distance), toInt(max_requests));
-            beneficiary->act(*this);
         }
         else if (word == "volunteer")
         {
@@ -170,7 +171,7 @@ Volunteer &MedicalWareHouse::getVolunteer(int volunteerId) const
 SupplyRequest &MedicalWareHouse::getRequest(int requestId) const
 {
 
-    SupplyRequest *backRequest = new SupplyRequest(-1,-1,-1);
+    SupplyRequest *backRequest = new SupplyRequest(-1, -1, -1);
     for (SupplyRequest *request : pendingRequests)
         if (request->getId() == requestId)
             return *request;
@@ -182,30 +183,27 @@ SupplyRequest &MedicalWareHouse::getRequest(int requestId) const
     for (SupplyRequest *request : completedRequests)
         if (request->getId() == requestId)
             return *request;
-        return *backRequest;
-
+    return *backRequest;
 }
 
 bool MedicalWareHouse::registerBeneficiary(const string &name, beneficiaryType type, int distance, int max_request)
 {
-    switch (type)
+    if (type == beneficiaryType::Hospital)
     {
-    case beneficiaryType::Hospital:
         HospitalBeneficiary *newBen = new HospitalBeneficiary(beneficiaryCounter, name, distance, max_request);
         Beneficiaries.push_back(newBen);
         beneficiaryCounter++;
         return true;
+    }
 
-    case beneficiaryType::Clinic:
+    if (type == beneficiaryType::Clinic)
+    {
         ClinicBeneficiary *newBen = new ClinicBeneficiary(beneficiaryCounter, name, distance, max_request);
         Beneficiaries.push_back(newBen);
         beneficiaryCounter++;
         return true;
-
-    default:
-        // This should never happen
-        return false;
     }
+    return false;
 }
 
 const vector<CoreAction *> &MedicalWareHouse::getActions() const
@@ -223,37 +221,41 @@ void MedicalWareHouse::open()
     isOpen = true;
 }
 
-//help function
+// help function
 template <typename T>
-void eraseElement(std::vector<T> &vec, const T &element)
+void eraseElement(std::vector<T*> &vec, const T* const &element) // Corrected parameter type
 {
     auto it = std::find(vec.begin(), vec.end(), element);
-    if (it != vec.end())
+    if (it != vec.end()) {
         vec.erase(it);
-    delete element;
+        delete *it; // Delete the pointer object
+    }
 }
+
 
 int MedicalWareHouse::getLastRequestId()
 {
-     int maxID = 0;
-    
+    int maxID = 0;
+
     // Combine all vectors into a single vector
-    std::vector<SupplyRequest*> allRequests;
+    std::vector<SupplyRequest *> allRequests;
     allRequests.insert(allRequests.end(), pendingRequests.begin(), pendingRequests.end());
     allRequests.insert(allRequests.end(), inProcessRequests.begin(), inProcessRequests.end());
     allRequests.insert(allRequests.end(), completedRequests.begin(), completedRequests.end());
 
     // Iterate over the combined vector to find the maximum ID
-    for (SupplyRequest* request : allRequests) {
-        if (request->getId() > maxID) {
+    for (SupplyRequest *request : allRequests)
+    {
+        if (request->getId() > maxID)
+        {
             maxID = request->getId();
         }
     }
 
-    return maxID;      
+    return maxID;
 }
 ////////
-//end help function
+// end help function
 ///////
 
 void MedicalWareHouse::simulateStep()
@@ -267,7 +269,7 @@ void MedicalWareHouse::simulateStep()
 }
 void MedicalWareHouse::updateRequestForVolunteer()
 {
-      for (int i = 0; i < pendingRequests.size(); i++)
+    for (int i = 0; i < pendingRequests.size(); i++)
     {
         SupplyRequest *supplyRequest = pendingRequests[i];
         if (supplyRequest->getStatus() == RequestStatus::PENDING)
@@ -285,20 +287,19 @@ void MedicalWareHouse::updateRequestForVolunteer()
                     }
         }
     }
-        for (int i = 0; i < inProcessRequests.size(); i++)
-        {
-           SupplyRequest *supplyRequest = inProcessRequests[i];
-            for (Volunteer *volunteer : volunteers)
-                if (volunteer->getType() == 1)
-                    if (volunteer->canTakeRequest(*supplyRequest))
-                    {
-                        volunteer->acceptRequest(*supplyRequest);
-                        supplyRequest->setStatus(RequestStatus::ON_THE_WAY);
-                        supplyRequest->setCourierId(volunteer->getId());
-                        inProcessRequests.push_back(supplyRequest);
-                        eraseElement(inProcessRequests, supplyRequest);
-                    }
-        }
- 
+    for (int i = 0; i < inProcessRequests.size(); i++)
+    {
+        SupplyRequest *supplyRequest = inProcessRequests[i];
+        for (Volunteer *volunteer : volunteers)
+            if (volunteer->getType() == 1)
+                if (volunteer->canTakeRequest(*supplyRequest))
+                {
+                    volunteer->acceptRequest(*supplyRequest);
+                    supplyRequest->setStatus(RequestStatus::ON_THE_WAY);
+                    supplyRequest->setCourierId(volunteer->getId());
+                    inProcessRequests.push_back(supplyRequest);
+                    eraseElement(inProcessRequests, supplyRequest);
+                }
+    }
 }
 #endif #MEDICALWAREHOUSE

@@ -46,6 +46,17 @@ void SimulateStep::act(MedicalWareHouse &medWareHouse)
     complete();
 }
 
+// help function
+//  helper function I -> string to CustomerType enum
+beneficiaryType stringToBeneficiaryType(const string &ct)
+{
+    if (ct == "Hospital")
+        return beneficiaryType::Hospital;
+
+    else
+        return beneficiaryType::Clinic;
+}
+
 std::string SimulateStep::toString() const
 {
     string name = "SimulateStep";
@@ -124,13 +135,13 @@ AddRequset *AddRequset::clone() const
 
 // Implementation of RegisterBeneficiary class
 RegisterBeneficiary::RegisterBeneficiary(const string &beneficiaryName, const string &beneficiaryType, int distance, int maxRequests)
-    : CoreAction(), beneficiaryName(beneficiaryName), beneficiaryType(stringToBeneficiaryType(beneficiaryType)), distance(distance), maxRequests(maxRequests) {}
+    : CoreAction(), beneficiaryName(beneficiaryName), beneficiaryType1(stringToBeneficiaryType(beneficiaryType)), distance(distance), maxRequests(maxRequests) {}
 
 void RegisterBeneficiary::act(MedicalWareHouse &medWareHouse)
 {
     medWareHouse.addAction(this);
 
-    if ((beneficiaryType != beneficiaryType::Clinic && beneficiaryType != beneficiaryType::Hospital))
+    if ((beneficiaryType1 != beneficiaryType::Clinic && beneficiaryType1 != beneficiaryType::Hospital))
     {
         error("Invalid customer type");
         return;
@@ -147,7 +158,7 @@ void RegisterBeneficiary::act(MedicalWareHouse &medWareHouse)
         error("Max orders must be positive");
         return;
     }
-    medWareHouse.registerBeneficiary(beneficiaryName, beneficiaryType, distance, maxRequests);
+    medWareHouse.registerBeneficiary(beneficiaryName, beneficiaryType1, distance, maxRequests);
     complete();
 }
 
@@ -169,7 +180,7 @@ string BeneficiaryTypeToString(beneficiaryType ct)
 string RegisterBeneficiary::toString() const
 {
     string name = "AddBeneficiary";
-    string args = beneficiaryName + " " + BeneficiaryTypeToString(beneficiaryType) + " " + std::to_string(distance) + " " + std::to_string(maxRequests);
+    string args = beneficiaryName + " " + BeneficiaryTypeToString(beneficiaryType1) + " " + std::to_string(distance) + " " + std::to_string(maxRequests);
     string s = "";
     if (this->getStatus() == ActionStatus::ERROR)
     {
@@ -182,17 +193,6 @@ string RegisterBeneficiary::toString() const
     }
 
     return name + " " + args + " " + s;
-}
-
-// help function
-//  helper function I -> string to CustomerType enum
-beneficiaryType stringToBeneficiaryType(const string &ct)
-{
-    if (ct == "Hospital")
-        return beneficiaryType::Hospital;
-
-    else
-        return beneficiaryType::Clinic;
 }
 
 void printWithNewLines(const std::string &str)
