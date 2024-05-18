@@ -26,12 +26,12 @@ class MedicalWareHouse {
         Volunteer &getVolunteer(int volunteerId) const;
         SupplyRequest &getRequest(int requestId) const;
         bool registerBeneficiary(const string &name, beneficiaryType type, int distance, int max_request);
-        void MedicalWareHouse::simulateStep() ;     
+        void simulateStep() ;     
         const vector<CoreAction*> &getActions() const;
         void close();
         void open();
         //we add this help function
-        void MedicalWareHouse::updateRequestForVolunteer();
+        void updateRequestForVolunteer();
         int getLastRequestId();
 
 
