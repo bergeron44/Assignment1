@@ -42,7 +42,7 @@ const vector<int> &Beneficiary::getRequestsIds() const
 
 int Beneficiary::addRequest(int RequestId)
 {
-    if (canMakeRequest)
+    if (this->canMakeRequest())
     {
         requestsId.push_back(RequestId);
         return RequestId; // Return RequestId if added successfully

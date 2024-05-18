@@ -102,7 +102,7 @@ bool InventoryManagerVolunteer::canTakeRequest(const SupplyRequest &request) con
 // override func:
 void InventoryManagerVolunteer::acceptRequest(const SupplyRequest &request)
 {
-    if (canTakeRequest)
+    if (canTakeRequest(request))
     {
         activeRequestId = request.getId();
         timeLeft = getCoolDown();
@@ -179,7 +179,7 @@ bool CourierVolunteer::hasRequestsLeft() const
 }
 
 // override func:
-int InventoryManagerVolunteer::getType() const
+int CourierVolunteer::getType() const
 {
     return 1;
 }

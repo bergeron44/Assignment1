@@ -156,6 +156,16 @@ RegisterBeneficiary *RegisterBeneficiary::clone() const
     return new RegisterBeneficiary(*this);
 }
 
+// helper function II -> CustomerType enum to string
+string BeneficiaryTypeToString(beneficiaryType ct)
+{
+    if (ct == beneficiaryType::Hospital)
+        return "Hospital";
+
+    else
+        return "Clinic";
+}
+
 string RegisterBeneficiary::toString() const
 {
     string name = "AddBeneficiary";
@@ -199,15 +209,7 @@ void printWithNewLines(const std::string &str)
         }
     }
 }
-// helper function II -> CustomerType enum to string
-string BeneficiaryTypeToString(beneficiaryType ct)
-{
-    if (ct == beneficiaryType::Hospital)
-        return "Hospital";
 
-    else
-        return "Clinic";
-}
 
 PrintRequestStatus::PrintRequestStatus(int id)
     : requestId(id), CoreAction() {}
