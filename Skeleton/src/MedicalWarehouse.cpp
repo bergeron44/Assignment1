@@ -1,6 +1,10 @@
+#ifndef MEDICALWAREHOUSE_H
+#define MEDICALWAREHOUSE_H
+
 #include "../include/MedicalWarehouse.h"
 #include <fstream>
 #include <string>
+#include <vector>
 #include <sstream>
 #include <iostream>
 #include <stdexcept>
@@ -297,5 +301,4 @@ void MedicalWareHouse::updateRequestForVolunteer()
         }
  
 }
-
-
+#endif #MEDICALWAREHOUSE

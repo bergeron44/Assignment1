@@ -1,13 +1,16 @@
 #pragma once
+
 #include <string>
 #include <vector>
 
 #include "SupplyRequest.h"
 #include "Beneficiary.h"
 
+
 class CoreAction;
 class Volunteer;
 
+enum class beneficiaryType;
 // Warehouse responsible for Volunteers, Beneficiaries Actions, and SupplyRequests.
 
 
