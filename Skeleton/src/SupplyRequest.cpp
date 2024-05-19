@@ -29,6 +29,10 @@ void SupplyRequest::setInventoryManagerId(int inventoryManagerId)
 {
     this->inventoryManagerId = inventoryManagerId;
 }
+void SupplyRequest::setCourierId(int courierId)
+{
+    this->CourierId = courierId;
+}
 
 int SupplyRequest::getInventoryManagerId() const
 {
