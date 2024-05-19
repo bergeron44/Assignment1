@@ -3,7 +3,7 @@
 #include <iostream>
 #include <algorithm>
 
-
+extern MedicalWareHouse *backup;
 
 CoreAction::CoreAction() : status(ActionStatus::ERROR) {}
 
@@ -94,23 +94,21 @@ void AddRequset::act(MedicalWareHouse &medWareHouse)
         error("Beneficiary ID must be positive");
         return;
     }
-
-    Beneficiary &Beneficiary = medWareHouse.getBeneficiary(beneficiaryId);
-    if (Beneficiary.getId() == -1) // pay attention when we write the getBeneficiary
+    try
     {
-        error("beneficiary does not exist");
-        return;
+        Beneficiary &Beneficiary = medWareHouse.getBeneficiary(beneficiaryId);
+        if (!Beneficiary.canMakeRequest())
+        {
+            error("Beneficiary has reached max SupplyRequest amount");
+            return;
+        }
+        medWareHouse.addRequestAct(beneficiaryId, Beneficiary.getBeneficiaryDistance());
+        complete();
     }
-
-    if (!Beneficiary.canMakeRequest())
+    catch (const std::exception &e)
     {
-        error("Beneficiary has reached max SupplyRequest amount");
-        return;
+        std::cout << "Beneficiary does not exist." << std::endl;
     }
-
-    medWareHouse.addRequestAct(beneficiaryId, Beneficiary.getBeneficiaryDistance());
-
-    complete();
 }
 
 string AddRequset::toString() const

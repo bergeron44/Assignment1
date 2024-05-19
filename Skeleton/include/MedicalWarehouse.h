@@ -48,3 +48,4 @@ private:
     int volunteerCounter;   // For assigning unique volunteer IDs
 };
 
+extern MedicalWareHouse* backup;

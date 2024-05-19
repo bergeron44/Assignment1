@@ -14,6 +14,8 @@
 #include "SupplyRequest.h"
 #include "Action.h"
 
+extern MedicalWareHouse* backup;
+
 int toInt(string str)
 {
     int num;

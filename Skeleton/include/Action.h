@@ -138,4 +138,4 @@ class RestoreWareHouse : public CoreAction {
         string toString() const override;
     private:
 };
-extern MedicalWareHouse* backup=nullptr;
+extern MedicalWareHouse* backup;
