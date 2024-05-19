@@ -88,3 +88,7 @@ const string SupplyRequest::toString() const // the stracture is:<requestID> <be
     }
     return str;
 }
+SupplyRequest* SupplyRequest::clone() const
+{
+   return new SupplyRequest(*this);
+}

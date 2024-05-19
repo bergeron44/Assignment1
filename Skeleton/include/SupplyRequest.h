@@ -28,6 +28,7 @@ class SupplyRequest {
         int getDistance() const;
         RequestStatus getStatus() const;
         const string toString() const;
+        SupplyRequest* clone() const;
 
     private:
         const int id;
