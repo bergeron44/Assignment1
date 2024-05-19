@@ -3,6 +3,8 @@
 #include <iostream>
 #include <algorithm>
 
+
+
 CoreAction::CoreAction() : status(ActionStatus::ERROR) {}
 
 ActionStatus CoreAction::getStatus() const
@@ -210,7 +212,6 @@ void printWithNewLines(const std::string &str)
     }
 }
 
-
 PrintRequestStatus::PrintRequestStatus(int id)
     : requestId(id), CoreAction() {}
 
@@ -402,7 +403,7 @@ string Close::toString() const
     return name + " " + s;
 }
 
-PrintActionsLog::PrintActionsLog() {}
+PrintActionsLog::PrintActionsLog() : CoreAction() {}
 
 void PrintActionsLog::act(MedicalWareHouse &medWareHouse)
 {
@@ -422,20 +423,60 @@ PrintActionsLog *PrintActionsLog::clone() const
 
 string PrintActionsLog::toString() const
 {
-    return "PrintActionsLog COMPLETED";
+    string name = "PrintVolunteerStatus";
+    string s;
+    if (this->getStatus() == ActionStatus::ERROR)
+    {
+        s = "ERROR" + getErrorMsg();
+    }
+
+    else
+    {
+        s = "COMPLETED";
+    }
+
+    return name + " " + s;
+}
+BackupWareHouse::BackupWareHouse() : CoreAction() {}
+
+void BackupWareHouse::act(MedicalWareHouse &medWareHouse)
+{
+    medWareHouse.clone();
+    medWareHouse.addAction(this);
+    complete();
+}
+BackupWareHouse *BackupWareHouse::clone() const
+{
+    return new BackupWareHouse(*this);
+}
+
+string BackupWareHouse::toString() const
+{
+    string name = "PrintVolunteerStatus";
+    string s;
+    if (this->getStatus() == ActionStatus::ERROR)
+    {
+        s = "ERROR" + getErrorMsg();
+    }
+
+    else
+    {
+        s = "COMPLETED";
+    }
+
+    return name + " " + s;
 }
 RestoreWareHouse::RestoreWareHouse() : CoreAction() {}
 
 void RestoreWareHouse::act(MedicalWareHouse &medWareHouse)
 {
-    extern medWareHouse *backup;
-
     if (backup == nullptr)
     {
         error("No Backup Available");
         medWareHouse.addAction(this);
         return;
     }
+    medWareHouse.clear();
     medWareHouse = *backup;
 
     medWareHouse.addAction(this);

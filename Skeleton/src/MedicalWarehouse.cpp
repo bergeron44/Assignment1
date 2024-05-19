@@ -97,7 +97,8 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
     }
     configFile.close();
 }
-void MedicalWareHouse::processCommand(const std::string& command) {
+void MedicalWareHouse::processCommand(const std::string &command)
+{
     // Tokenize the command to extract the action and arguments
     std::string action, arg1, arg2, arg3, arg4;
     std::istringstream iss(command);
@@ -106,72 +107,81 @@ void MedicalWareHouse::processCommand(const std::string& command) {
     // Convert action to lowercase for case-insensitive comparison
     std::transform(action.begin(), action.end(), action.begin(), ::tolower);
 
-    if (action == "step") {
+    if (action == "step")
+    {
         int steps = std::stoi(arg1);
         std::cout << "Executing step command with " << steps << " steps." << std::endl;
-        SimulateStep* simulateStep = new SimulateStep(steps);
+        SimulateStep *simulateStep = new SimulateStep(steps);
         simulateStep->act(*this);
-    } else if (action == "request") {
+    }
+    else if (action == "request")
+    {
         // Handle request command
         int beneficiaryID = std::stoi(arg1);
         std::cout << "Executing request command for beneficiary ID: " << beneficiaryID << std::endl;
-        AddRequset *request= new AddRequset(beneficiaryID);
+        AddRequset *request = new AddRequset(beneficiaryID);
         request->act(*this);
-    } else if (action == "register") {
+    }
+    else if (action == "register")
+    {
         // Handle register command
         std::string beneficiaryName = arg1;
         std::string type = arg2;
         int distance = std::stoi(arg3);
         int maxRequests = std::stoi(arg4);
         std::cout << "Executing register command for beneficiary: " << beneficiaryName << std::endl;
-        RegisterBeneficiary *rb = new RegisterBeneficiary(beneficiaryName,type,distance,maxRequests);
+        RegisterBeneficiary *rb = new RegisterBeneficiary(beneficiaryName, type, distance, maxRequests);
         rb->act(*this);
-    } else if (action == "requestStatus") {
+    }
+    else if (action == "requestStatus")
+    {
         // Handle requestStatus command
         int requestID = std::stoi(arg1);
         std::cout << "Executing requestStatus command for request ID: " << requestID << std::endl;
-       PrintRequestStatus *prs= new PrintRequestStatus(requestID);
-                      prs->act(*this);
-
-        
-    } else if (action == "beneficiaryStatus") {
+        PrintRequestStatus *prs = new PrintRequestStatus(requestID);
+        prs->act(*this);
+    }
+    else if (action == "beneficiaryStatus")
+    {
         // Handle beneficiaryStatus command
         int beneficiaryID = std::stoi(arg1);
         std::cout << "Executing beneficiaryStatus command for beneficiary ID: " << beneficiaryID << std::endl;
-       PrintBeneficiaryStatus *pbs= new PrintBeneficiaryStatus(beneficiaryID);
-                      pbs->act(*this);
+        PrintBeneficiaryStatus *pbs = new PrintBeneficiaryStatus(beneficiaryID);
+        pbs->act(*this);
+    }
 
-    } 
-
-    else if (action == "volunteerStatus") {
+    else if (action == "volunteerStatus")
+    {
         // Handle beneficiaryStatus command
         int volunteerID = std::stoi(arg1);
         std::cout << "Executing beneficiaryStatus command for beneficiary ID: " << volunteerID << std::endl;
-        PrintVolunteerStatus *pvs= new PrintVolunteerStatus(volunteerID);
+        PrintVolunteerStatus *pvs = new PrintVolunteerStatus(volunteerID);
         pvs->act(*this);
-
-    } 
-     else if (action == "log") {
+    }
+    else if (action == "log")
+    {
         std::cout << "Executing beneficiaryStatus command for beneficiary ID: " << std::endl;
-        PrintActionsLog *pal= new PrintActionsLog();
+        PrintActionsLog *pal = new PrintActionsLog();
         pal->act(*this);
-
-    } 
-     else if (action == "restore") {
+    }
+    else if (action == "restore")
+    {
         std::cout << "Executing restore: " << std::endl;
-        RestoreWareHouse* rwh=new RestoreWareHouse();
-
-    } 
-     else if (action == "backup") {
-        std::cout << "Executing backup: "  << std::endl;
-        BackupWareHouse* bwh= new BackupWareHouse(); 
-
-    } 
-    else if (action == "close") {
+        RestoreWareHouse *rwh = new RestoreWareHouse();
+    }
+    else if (action == "backup")
+    {
+        std::cout << "Executing backup: " << std::endl;
+        BackupWareHouse *bwh = new BackupWareHouse();
+    }
+    else if (action == "close")
+    {
         std::cout << "Executing close  " << std::endl;
-        Close* c= new Close();
+        Close *c = new Close();
         c->act(*this);
-    } else {
+    }
+    else
+    {
         // Invalid command
         std::cout << "Invalid command: " << action << std::endl;
     }
@@ -186,8 +196,8 @@ void MedicalWareHouse::start()
     {
         std::cout << "in the while" << std::endl;
         std::getline(std::cin, inputString);
-        std::istringstream iss(inputString); 
-        processCommand(inputString);     
+        std::istringstream iss(inputString);
+        processCommand(inputString);
     }
     std::cout << "after while" << std::endl;
 }
@@ -378,4 +388,54 @@ void MedicalWareHouse::updateRequestForVolunteer()
                 }
     }
 }
+
+void MedicalWareHouse::clone()
+{
+    if (isOpen)
+    {
+        backup->open();
+    }
+    for (auto action : actionsLog)
+    {
+        backup->actionsLog.push_back(action->clone());
+    }
+    for (auto volunteer : volunteers)
+    {
+        backup->volunteers.push_back(volunteer->clone());
+    }
+    for (auto beneficiary : Beneficiaries)
+    {
+        backup->Beneficiaries.push_back(beneficiary->clone());
+    }
+    for (auto request : pendingRequests)
+    {
+        backup->pendingRequests.push_back(request->clone());
+    }
+    for (auto request : inProcessRequests)
+    {
+        backup->inProcessRequests.push_back(request->clone());
+    }
+    for (auto request : completedRequests)
+    {
+        backup->completedRequests.push_back(request->clone());
+    }
+    backup->beneficiaryCounter = beneficiaryCounter;
+    backup->volunteerCounter = volunteerCounter;
+}
+void MedicalWareHouse::clear()
+{
+    actionsLog.clear();
+    volunteers.clear();
+    Beneficiaries.clear();
+    pendingRequests.clear();
+    inProcessRequests.clear();
+    completedRequests.clear();
+    actionsLog.shrink_to_fit();
+    volunteers.shrink_to_fit();
+    Beneficiaries.shrink_to_fit();
+    pendingRequests.shrink_to_fit();
+    inProcessRequests.shrink_to_fit();
+    completedRequests.shrink_to_fit();
+}
+
 #endif #MEDICALWAREHOUSE
