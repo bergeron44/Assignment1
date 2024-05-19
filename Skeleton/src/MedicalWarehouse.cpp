@@ -97,7 +97,55 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
     }
     configFile.close();
 }
+void processCommand(const std::string& command) {
+    // Tokenize the command to extract the action and arguments
+    std::string action, arg1, arg2, arg3, arg4;
+    std::istringstream iss(command);
+    iss >> action >> arg1 >> arg2 >> arg3 >> arg4;
 
+    // Convert action to lowercase for case-insensitive comparison
+    std::transform(action.begin(), action.end(), action.begin(), ::tolower);
+
+    // Process commands using switch-case
+    if (action == "step") {
+        int steps = std::stoi(arg1);
+        std::cout << "Executing step command with " << steps << " steps." << std::endl;
+        SimulateStep* simulateStep = new SimulateStep(steps);
+    } else if (action == "request") {
+        // Handle request command
+        int beneficiaryID = std::stoi(arg1);
+        std::cout << "Executing request command for beneficiary ID: " << beneficiaryID << std::endl;
+        AddRequset *request= new AddRequset(beneficiaryID);
+    } else if (action == "register") {
+        // Handle register command
+        std::string beneficiaryName = arg1;
+        std::string type = arg2;
+        int distance = std::stoi(arg3);
+        int maxRequests = std::stoi(arg4);
+        std::cout << "Executing register command for beneficiary: " << beneficiaryName << std::endl;
+        RegisterBeneficiary *rb = new RegisterBeneficiary(beneficiaryName,type,distance,maxRequests);
+    } else if (action == "requeststatus") {
+        // Handle requestStatus command
+        int requestID = std::stoi(arg1);
+        std::cout << "Executing requestStatus command for request ID: " << requestID << std::endl;
+        SupplyRequest& rs= ;
+        // Implement requestStatus command logic here
+    } else if (action == "beneficiarystatus") {
+        // Handle beneficiaryStatus command
+        int beneficiaryID = std::stoi(arg1);
+        std::cout << "Executing beneficiaryStatus command for beneficiary ID: " << beneficiaryID << std::endl;
+        // Implement beneficiaryStatus command logic here
+    } 
+    else if (action == "close") {
+        // Handle beneficiaryStatus command
+        int beneficiaryID = std::stoi(arg1);
+        std::cout << "Executing close  " << beneficiaryID << std::endl;
+        // Implement beneficiaryStatus command logic here
+    } else {
+        // Invalid command
+        std::cout << "Invalid command: " << action << std::endl;
+    }
+}
 void MedicalWareHouse::start()
 {
     open();
@@ -108,9 +156,8 @@ void MedicalWareHouse::start()
     {
         std::cout << "in the while" << std::endl;
         std::getline(std::cin, inputString);
-        std::istringstream iss(inputString);
-        string actionType;
-        iss >> actionType;        
+        std::istringstream iss(inputString); 
+        processCommand(inputString);     
     }
     std::cout << "after while" << std::endl;
 }
