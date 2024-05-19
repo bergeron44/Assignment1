@@ -97,7 +97,7 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
     }
     configFile.close();
 }
-void processCommand(const std::string& command) {
+void MedicalWareHouse::processCommand(const std::string& command) {
     // Tokenize the command to extract the action and arguments
     std::string action, arg1, arg2, arg3, arg4;
     std::istringstream iss(command);
@@ -110,11 +110,13 @@ void processCommand(const std::string& command) {
         int steps = std::stoi(arg1);
         std::cout << "Executing step command with " << steps << " steps." << std::endl;
         SimulateStep* simulateStep = new SimulateStep(steps);
+        simulateStep->act(*this);
     } else if (action == "request") {
         // Handle request command
         int beneficiaryID = std::stoi(arg1);
         std::cout << "Executing request command for beneficiary ID: " << beneficiaryID << std::endl;
         AddRequset *request= new AddRequset(beneficiaryID);
+        request->act(*this);
     } else if (action == "register") {
         // Handle register command
         std::string beneficiaryName = arg1;
@@ -123,21 +125,52 @@ void processCommand(const std::string& command) {
         int maxRequests = std::stoi(arg4);
         std::cout << "Executing register command for beneficiary: " << beneficiaryName << std::endl;
         RegisterBeneficiary *rb = new RegisterBeneficiary(beneficiaryName,type,distance,maxRequests);
-    } else if (action == "requeststatus") {
+        rb->act(*this);
+    } else if (action == "requestStatus") {
         // Handle requestStatus command
         int requestID = std::stoi(arg1);
         std::cout << "Executing requestStatus command for request ID: " << requestID << std::endl;
-    } else if (action == "beneficiarystatus") {
+       PrintRequestStatus *prs= new PrintRequestStatus(requestID);
+                      prs->act(*this);
+
+        
+    } else if (action == "beneficiaryStatus") {
         // Handle beneficiaryStatus command
         int beneficiaryID = std::stoi(arg1);
         std::cout << "Executing beneficiaryStatus command for beneficiary ID: " << beneficiaryID << std::endl;
-        // Implement beneficiaryStatus command logic here
+       PrintBeneficiaryStatus *pbs= new PrintBeneficiaryStatus(beneficiaryID);
+                      pbs->act(*this);
+
+    } 
+
+    else if (action == "volunteerStatus") {
+        // Handle beneficiaryStatus command
+        int volunteerID = std::stoi(arg1);
+        std::cout << "Executing beneficiaryStatus command for beneficiary ID: " << volunteerID << std::endl;
+        PrintVolunteerStatus *pvs= new PrintVolunteerStatus(volunteerID);
+        pvs->act(*this);
+
+    } 
+     else if (action == "log") {
+        std::cout << "Executing beneficiaryStatus command for beneficiary ID: " << std::endl;
+        PrintActionsLog *pal= new PrintActionsLog();
+        pal->act(*this);
+
+    } 
+     else if (action == "restore") {
+        std::cout << "Executing restore: " << std::endl;
+        RestoreWareHouse* rwh=new RestoreWareHouse();
+
+    } 
+     else if (action == "backup") {
+        std::cout << "Executing backup: "  << std::endl;
+        BackupWareHouse* bwh= new BackupWareHouse(); 
+
     } 
     else if (action == "close") {
-        // Handle beneficiaryStatus command
-        int beneficiaryID = std::stoi(arg1);
-        std::cout << "Executing close  " << beneficiaryID << std::endl;
-        // Implement beneficiaryStatus command logic here
+        std::cout << "Executing close  " << std::endl;
+        Close* c= new Close();
+        c->act(*this);
     } else {
         // Invalid command
         std::cout << "Invalid command: " << action << std::endl;
