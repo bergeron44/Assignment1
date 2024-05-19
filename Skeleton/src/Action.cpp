@@ -424,3 +424,41 @@ string PrintActionsLog::toString() const
 {
     return "PrintActionsLog COMPLETED";
 }
+RestoreWareHouse::RestoreWareHouse() : CoreAction() {}
+
+void RestoreWareHouse::act(MedicalWareHouse &medWareHouse)
+{
+    extern medWareHouse *backup;
+
+    if (backup == nullptr)
+    {
+        error("No Backup Available");
+        medWareHouse.addAction(this);
+        return;
+    }
+    medWareHouse = *backup;
+
+    medWareHouse.addAction(this);
+    complete();
+}
+
+RestoreWareHouse *RestoreWareHouse::clone() const
+{
+    return new RestoreWareHouse(*this);
+}
+
+string RestoreWareHouse::toString() const
+{
+    string name = "RestoreWareHouse";
+    string s = "";
+    if (this->getStatus() == ActionStatus::ERROR)
+    {
+        s = "ERROR";
+    }
+
+    else
+    {
+        s = "COMPLETED";
+    }
+    return name + " " + s;
+}
