@@ -13,7 +13,7 @@ SRC_FILES = $(SRC_DIR)/main.cpp \
             $(SRC_DIR)/Beneficiary.cpp \
             $(SRC_DIR)/Volunteer.cpp \
             $(SRC_DIR)/SupplyRequest.cpp \
-            $(SRC_DIR)/MedicalWareHouse.cpp \
+            $(SRC_DIR)/MedicalWarehouse.cpp \
             $(SRC_DIR)/Action.cpp
 
 # Object files
@@ -21,7 +21,7 @@ OBJ_FILES = $(BIN_DIR)/main.o \
             $(BIN_DIR)/Beneficiary.o \
             $(BIN_DIR)/Volunteer.o \
             $(BIN_DIR)/SupplyRequest.o \
-            $(BIN_DIR)/MedicalWareHouse.o \
+            $(BIN_DIR)/MedicalWarehouse.o \
             $(BIN_DIR)/Action.o
 
 # Target executable
@@ -40,7 +40,10 @@ $(BIN_DIR):
 link: $(OBJ_FILES)
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJ_FILES)
 
+run: all
+	$(TARGET)
+
 clean:
 	rm -f $(BIN_DIR)/*
 
-.PHONY: all clean compile link
+.PHONY: all clean compile link run
