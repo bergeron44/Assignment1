@@ -106,7 +106,6 @@ void processCommand(const std::string& command) {
     // Convert action to lowercase for case-insensitive comparison
     std::transform(action.begin(), action.end(), action.begin(), ::tolower);
 
-    // Process commands using switch-case
     if (action == "step") {
         int steps = std::stoi(arg1);
         std::cout << "Executing step command with " << steps << " steps." << std::endl;
@@ -128,8 +127,6 @@ void processCommand(const std::string& command) {
         // Handle requestStatus command
         int requestID = std::stoi(arg1);
         std::cout << "Executing requestStatus command for request ID: " << requestID << std::endl;
-        SupplyRequest& rs= ;
-        // Implement requestStatus command logic here
     } else if (action == "beneficiarystatus") {
         // Handle beneficiaryStatus command
         int beneficiaryID = std::stoi(arg1);

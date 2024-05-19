@@ -33,6 +33,7 @@ class MedicalWareHouse {
         //we add this help function
         void updateRequestForVolunteer();
         int getLastRequestId();
+        void processCommand(const std::string& command);
 
 
     private:
