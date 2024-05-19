@@ -59,8 +59,9 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
             iss >> facility_type;
             iss >> location_distance;
             iss >> max_requests;
-            std::cout<<beneficiary_name <<std::endl;
-            RegisterBeneficiary *beneficiary = new RegisterBeneficiary(beneficiary_name, facility_type, toInt(location_distance), toInt(max_requests));
+            std::cout << beneficiary_name + " registered" << std::endl;
+            RegisterBeneficiary *regBeneficiary = new RegisterBeneficiary(beneficiary_name, facility_type, toInt(location_distance), toInt(max_requests));
+            regBeneficiary->act(*this);
         }
         else if (word == "volunteer")
         {
@@ -103,17 +104,15 @@ void MedicalWareHouse::start()
     std::cout << "Warehouse is open!" << std::endl;
 
     string inputString;
-    const vector<CoreAction *> a = getActions();
-    int i = 0;
     while (isOpen)
     {
+        std::cout << "in the while" << std::endl;
         std::getline(std::cin, inputString);
-        CoreAction *action = a[i];
-        if (action != nullptr)
-            action->act(*this);
-
-        i++;
+        std::istringstream iss(inputString);
+        string actionType;
+        iss >> actionType;        
     }
+    std::cout << "after while" << std::endl;
 }
 
 void MedicalWareHouse::addRequest(SupplyRequest *request)
@@ -223,15 +222,15 @@ void MedicalWareHouse::open()
 
 // help function
 template <typename T>
-void eraseElement(std::vector<T*> &vec, const T* const &element) // Corrected parameter type
+void eraseElement(std::vector<T *> &vec, const T *const &element) // Corrected parameter type
 {
     auto it = std::find(vec.begin(), vec.end(), element);
-    if (it != vec.end()) {
+    if (it != vec.end())
+    {
         vec.erase(it);
         delete *it; // Delete the pointer object
     }
 }
-
 
 int MedicalWareHouse::getLastRequestId()
 {
