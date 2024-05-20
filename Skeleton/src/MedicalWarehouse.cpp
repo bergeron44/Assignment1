@@ -219,7 +219,9 @@ void MedicalWareHouse::addRequestAct(int beneficiaryId, int distance)
 {
     int id = pendingRequests.size() + inProcessRequests.size() + completedRequests.size();
     SupplyRequest *request = new SupplyRequest(id, beneficiaryId, distance);
+    Beneficiary &b=getBeneficiary(beneficiaryId);
     addRequest(request);
+    b.addRequest(id);
 }
 
 void MedicalWareHouse::addAction(CoreAction *action)
@@ -341,6 +343,10 @@ void MedicalWareHouse::simulateStep()
     {
         volunteer->step();
     }
+   
+    //step 3
+     updateRequestForVolunteer();
+
 }
 void MedicalWareHouse::updateRequestForVolunteer()
 {
@@ -357,6 +363,7 @@ void MedicalWareHouse::updateRequestForVolunteer()
             {
                 pendingRequests.push_back(supplyRequest);
                 inProcessRequests.erase(inProcessRequests.begin() + i);
+                i--;
             }
         }
         else
@@ -367,6 +374,7 @@ void MedicalWareHouse::updateRequestForVolunteer()
                 supplyRequest->setStatus(RequestStatus::DONE);
                 completedRequests.push_back(supplyRequest);
                 inProcessRequests.erase(inProcessRequests.begin() + i);
+                i--;
             }
         }
     }
@@ -389,6 +397,7 @@ void MedicalWareHouse::updateRequestForVolunteer()
                         supplyRequest->setInventoryManagerId(volunteer->getId());
                         inProcessRequests.push_back(supplyRequest);
                         pendingRequests.erase(pendingRequests.begin() + i);
+                        i--;
                         break;
                     }
                 }
@@ -405,6 +414,7 @@ void MedicalWareHouse::updateRequestForVolunteer()
                         supplyRequest->setCourierId(volunteer->getId());
                         inProcessRequests.push_back(supplyRequest);
                         pendingRequests.erase(pendingRequests.begin() + i);
+                        i--;
                         break;
                     }
         }

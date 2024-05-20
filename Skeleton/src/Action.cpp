@@ -286,9 +286,9 @@ void PrintBeneficiaryStatus::act(MedicalWareHouse &medWareHouse)
             std::cout << "Request ID: " << id << std::endl;
             SupplyRequest &request = medWareHouse.getRequest(id);
             std::cout << "Status: " << statusRequestToString(request.getStatus()) << std::endl;
-            std::cout << "Requests Left: " << beneficiary.getNumRequests() << std::endl;
-            complete();
         }
+          std::cout << "Requests Left: " << beneficiary.getNumRequests() << std::endl;
+            complete();
     }
     catch (const std::exception &e)
     {
