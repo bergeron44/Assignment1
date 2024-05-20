@@ -20,18 +20,18 @@ int SupplyRequest::getBeneficiaryId() const
     return beneficiaryId;
 }
 
-void SupplyRequest::setStatus(RequestStatus status)
+void SupplyRequest::setStatus(RequestStatus newStatus)
 {
-    this->status = status;
+    status = newStatus;
 }
 
-void SupplyRequest::setInventoryManagerId(int inventoryManagerId)
+void SupplyRequest::setInventoryManagerId(int newInventoryManagerId)
 {
-    this->inventoryManagerId = inventoryManagerId;
+    inventoryManagerId = newInventoryManagerId;
 }
 void SupplyRequest::setCourierId(int courierId)
 {
-    this->CourierId = courierId;
+    CourierId = courierId;
 }
 
 int SupplyRequest::getInventoryManagerId() const
@@ -75,12 +75,12 @@ int SupplyRequest::getDistance() const
     return distance;
 }
 
-const string SupplyRequest::toString() const // the stracture is:<requestID> <beneficiaryID> <distance> <status> <inventoryManagerID> <CourierID>
+const string SupplyRequest::toString() const
 {
-    string str = "|Request ID: " + std::to_string(id) + "|Status: " + RequestStatusToString(status) + "|Beneficiary ID: " + std::to_string(beneficiaryId);
+    string str = "|Request ID: " + std::to_string(id) + "|Status: " + RequestStatusToString(status) + "|Beneficiary ID: " + std::to_string(beneficiaryId)+"|";
     if (status != RequestStatus::PENDING)
     {
-        str = str + "|Inventory Manager: " + std::to_string(getInventoryManagerId()) + "|";
+        str = str + "Inventory Manager: " + std::to_string(getInventoryManagerId()) + "|";
     }
     if (status != RequestStatus::PENDING || status != RequestStatus::COLLECTING)
     {

@@ -14,7 +14,7 @@
 #include "SupplyRequest.h"
 #include "Action.h"
 
-extern MedicalWareHouse* backup;
+extern MedicalWareHouse *backup;
 
 int toInt(string str)
 {
@@ -105,9 +105,6 @@ void MedicalWareHouse::processCommand(const std::string &command)
     std::string action, arg1, arg2, arg3, arg4;
     std::istringstream iss(command);
     iss >> action >> arg1 >> arg2 >> arg3 >> arg4;
-
-    // Convert action to lowercase for case-insensitive comparison
-    std::transform(action.begin(), action.end(), action.begin(), ::tolower);
 
     if (action == "step")
     {
@@ -360,19 +357,25 @@ void MedicalWareHouse::updateRequestForVolunteer()
     for (int i = 0; i < pendingRequests.size(); i++)
     {
         SupplyRequest *supplyRequest = pendingRequests[i];
+        std::cout << supplyRequest->toString() << std::endl;
         if (supplyRequest->getStatus() == RequestStatus::PENDING)
         {
             for (Volunteer *volunteer : volunteers)
+            {
                 if (volunteer->getType() == 0)
+                {
                     if (volunteer->canTakeRequest(*supplyRequest))
                     {
                         volunteer->acceptRequest(*supplyRequest);
                         supplyRequest->setStatus(RequestStatus::COLLECTING);
                         supplyRequest->setInventoryManagerId(volunteer->getId());
                         inProcessRequests.push_back(supplyRequest);
-                        pendingRequests.pop_back();
                         eraseElement(pendingRequests, supplyRequest);
+                        break;
                     }
+                    std::cout << supplyRequest->toString() << std::endl;
+                }
+            }
         }
     }
     for (int i = 0; i < inProcessRequests.size(); i++)

@@ -35,7 +35,6 @@ void SimulateStep::act(MedicalWareHouse &medWareHouse)
 {
     // step the volunteers
     medWareHouse.addAction(this);
-
     if (numOfSteps <= 0)
     {
         error("Number of steps must be positive!");
@@ -43,7 +42,9 @@ void SimulateStep::act(MedicalWareHouse &medWareHouse)
     }
 
     for (int i = 0; i < numOfSteps; i++)
+    {
         medWareHouse.simulateStep();
+    }
 
     complete();
 }

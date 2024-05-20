@@ -96,7 +96,8 @@ int InventoryManagerVolunteer::getType() const
 // override func:
 bool InventoryManagerVolunteer::canTakeRequest(const SupplyRequest &request) const
 {
-    return hasRequestsLeft() & isBusy();
+    std::cout << std::to_string(hasRequestsLeft()) + std::to_string(isBusy()) << std::endl;
+    return !hasRequestsLeft() & !isBusy();
 }
 
 // override func:
@@ -105,6 +106,7 @@ void InventoryManagerVolunteer::acceptRequest(const SupplyRequest &request)
     if (canTakeRequest(request))
     {
         activeRequestId = request.getId();
+        std::cout << std::to_string(activeRequestId) << std::endl;
         timeLeft = getCoolDown();
     }
 }
@@ -186,9 +188,11 @@ int CourierVolunteer::getType() const
 
 bool CourierVolunteer::canTakeRequest(const SupplyRequest &request) const
 {
+    std::cout << std::to_string(hasRequestsLeft()) + std::to_string(isBusy()) << std::endl;
     if (!hasRequestsLeft() && !isBusy())
     {
         int distanceInt = request.getDistance();
+        std::cout << std::to_string(distanceInt) << std::endl;
         if (distanceInt <= maxDistance)
         {
             return true;
@@ -217,8 +221,10 @@ void CourierVolunteer::step()
     }
 }
 
-int divideAndRoundUp(int dividend, int divisor) {
-    if (divisor == 0) {
+int divideAndRoundUp(int dividend, int divisor)
+{
+    if (divisor == 0)
+    {
         throw std::invalid_argument("Divisor cannot be zero");
     }
 
