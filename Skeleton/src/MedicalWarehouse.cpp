@@ -350,14 +350,20 @@ void MedicalWareHouse::simulateStep()
 
     // step 2
     for (Volunteer *volunteer : volunteers)
+    {
         volunteer->step();
+    }
 }
 void MedicalWareHouse::updateRequestForVolunteer()
 {
+
+    // pending requests:
     for (int i = 0; i < pendingRequests.size(); i++)
     {
         SupplyRequest *supplyRequest = pendingRequests[i];
         std::cout << supplyRequest->toString() << std::endl;
+
+        // no inventory manager working on this request
         if (supplyRequest->getStatus() == RequestStatus::PENDING)
         {
             for (Volunteer *volunteer : volunteers)
@@ -377,20 +383,45 @@ void MedicalWareHouse::updateRequestForVolunteer()
                 }
             }
         }
+        else // the request waiting for courier
+        {
+            for (Volunteer *volunteer : volunteers)
+                if (volunteer->getType() == 1)
+                    if (volunteer->canTakeRequest(*supplyRequest))
+                    {
+                        volunteer->acceptRequest(*supplyRequest);
+                        supplyRequest->setStatus(RequestStatus::ON_THE_WAY);
+                        supplyRequest->setCourierId(volunteer->getId());
+                        inProcessRequests.push_back(supplyRequest);
+                        eraseElement(pendingRequests, supplyRequest);
+                    }
+        }
     }
+
+    //
     for (int i = 0; i < inProcessRequests.size(); i++)
     {
         SupplyRequest *supplyRequest = inProcessRequests[i];
-        for (Volunteer *volunteer : volunteers)
-            if (volunteer->getType() == 1)
-                if (volunteer->canTakeRequest(*supplyRequest))
-                {
-                    volunteer->acceptRequest(*supplyRequest);
-                    supplyRequest->setStatus(RequestStatus::ON_THE_WAY);
-                    supplyRequest->setCourierId(volunteer->getId());
-                    inProcessRequests.push_back(supplyRequest);
-                    eraseElement(inProcessRequests, supplyRequest);
-                }
+        // the request is inProcess, we are checking if the process is finished
+        if (supplyRequest->getStatus() == RequestStatus::COLLECTING)
+        {
+            Volunteer &volunteer = getVolunteer(supplyRequest->getInventoryManagerId());
+            if (volunteer.getActiveRequestId()!=supplyRequest->getId())
+            {
+                pendingRequests.push_back(supplyRequest);
+                eraseElement(inProcessRequests, supplyRequest);
+            }
+        }
+        else
+        {
+            Volunteer &volunteer = getVolunteer(supplyRequest->getCourierId());
+            if (volunteer.getActiveRequestId()!=supplyRequest->getId())
+            {
+                supplyRequest->setStatus(RequestStatus::DONE);
+                completedRequests.push_back(supplyRequest);
+                eraseElement(inProcessRequests, supplyRequest);
+            }
+        }
     }
 }
 

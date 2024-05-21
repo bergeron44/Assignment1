@@ -77,18 +77,18 @@ int SupplyRequest::getDistance() const
 
 const string SupplyRequest::toString() const
 {
-    string str = "|Request ID: " + std::to_string(id) + "|Status: " + RequestStatusToString(status) + "|Beneficiary ID: " + std::to_string(beneficiaryId)+"|";
+    string str = "|Request ID: " + std::to_string(id) + "|Status: " + RequestStatusToString(status) + "|Beneficiary ID: " + std::to_string(beneficiaryId) + "|";
     if (status != RequestStatus::PENDING)
     {
         str = str + "Inventory Manager: " + std::to_string(getInventoryManagerId()) + "|";
     }
     if (status != RequestStatus::PENDING || status != RequestStatus::COLLECTING)
     {
-        str=str+ "Courier: " + std::to_string(getCourierId()) + "|";
+        str = str + "Courier: " + std::to_string(getCourierId()) + "|";
     }
     return str;
 }
-SupplyRequest* SupplyRequest::clone() const
+SupplyRequest *SupplyRequest::clone() const
 {
-   return new SupplyRequest(*this);
+    return new SupplyRequest(*this);
 }
