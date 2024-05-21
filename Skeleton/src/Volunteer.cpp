@@ -96,7 +96,6 @@ int InventoryManagerVolunteer::getType() const
 // override func:
 bool InventoryManagerVolunteer::canTakeRequest(const SupplyRequest &request) const
 {
-    std::cout << std::to_string(hasRequestsLeft()) + std::to_string(isBusy()) << std::endl;
     return !hasRequestsLeft() & !isBusy();
 }
 
@@ -106,7 +105,6 @@ void InventoryManagerVolunteer::acceptRequest(const SupplyRequest &request)
     if (canTakeRequest(request))
     {
         activeRequestId = request.getId();
-        std::cout << std::to_string(activeRequestId) << std::endl;
         timeLeft = getCoolDown();
     }
 }
@@ -188,11 +186,9 @@ int CourierVolunteer::getType() const
 
 bool CourierVolunteer::canTakeRequest(const SupplyRequest &request) const
 {
-    std::cout << std::to_string(hasRequestsLeft()) + std::to_string(isBusy()) << std::endl;
     if (!hasRequestsLeft() && !isBusy())
     {
         int distanceInt = request.getDistance();
-        std::cout << std::to_string(distanceInt) << std::endl;
         if (distanceInt <= maxDistance)
         {
             return true;

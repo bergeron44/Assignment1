@@ -9,46 +9,6 @@ SupplyRequest::SupplyRequest(int id, int beneficiaryId, int distance) : id(id),
                                                                         status(RequestStatus::PENDING),
                                                                         inventoryManagerId(NO_VOLUNTEER),
                                                                         CourierId(NO_VOLUNTEER){};
-
-int SupplyRequest::getId() const
-{
-    return id;
-}
-
-int SupplyRequest::getBeneficiaryId() const
-{
-    return beneficiaryId;
-}
-
-void SupplyRequest::setStatus(RequestStatus newStatus)
-{
-    status = newStatus;
-}
-
-void SupplyRequest::setInventoryManagerId(int newInventoryManagerId)
-{
-    inventoryManagerId = newInventoryManagerId;
-}
-void SupplyRequest::setCourierId(int courierId)
-{
-    CourierId = courierId;
-}
-
-int SupplyRequest::getInventoryManagerId() const
-{
-    return inventoryManagerId;
-}
-
-int SupplyRequest::getCourierId() const
-{
-    return CourierId;
-}
-
-RequestStatus SupplyRequest::getStatus() const
-{
-    return status;
-}
-
 string RequestStatusToString(RequestStatus status)
 {
     switch (status)
@@ -70,6 +30,45 @@ string RequestStatusToString(RequestStatus status)
     }
 }
 
+int SupplyRequest::getId() const
+{
+    return id;
+}
+
+int SupplyRequest::getBeneficiaryId() const
+{
+    return beneficiaryId;
+}
+
+void SupplyRequest::setStatus(RequestStatus status)
+{
+    this->status = status;
+}
+
+void SupplyRequest::setInventoryManagerId(int newInventoryManagerId)
+{
+    this->inventoryManagerId = newInventoryManagerId;
+}
+void SupplyRequest::setCourierId(int courierId)
+{
+    this->CourierId = courierId;
+}
+
+int SupplyRequest::getInventoryManagerId() const
+{
+    return inventoryManagerId;
+}
+
+int SupplyRequest::getCourierId() const
+{
+    return CourierId;
+}
+
+RequestStatus SupplyRequest::getStatus() const
+{
+    return status;
+}
+
 int SupplyRequest::getDistance() const
 {
     return distance;
@@ -82,7 +81,7 @@ const string SupplyRequest::toString() const
     {
         str = str + "Inventory Manager: " + std::to_string(getInventoryManagerId()) + "|";
     }
-    if (status != RequestStatus::PENDING || status != RequestStatus::COLLECTING)
+    if (status != RequestStatus::PENDING && status != RequestStatus::COLLECTING)
     {
         str = str + "Courier: " + std::to_string(getCourierId()) + "|";
     }
