@@ -310,24 +310,7 @@ void MedicalWareHouse::open()
 
 int MedicalWareHouse::getLastRequestId()
 {
-    int maxID = 0;
-
-    // Combine all vectors into a single vector
-    std::vector<SupplyRequest *> allRequests;
-    allRequests.insert(allRequests.end(), pendingRequests.begin(), pendingRequests.end());
-    allRequests.insert(allRequests.end(), inProcessRequests.begin(), inProcessRequests.end());
-    allRequests.insert(allRequests.end(), completedRequests.begin(), completedRequests.end());
-
-    // Iterate over the combined vector to find the maximum ID
-    for (SupplyRequest *request : allRequests)
-    {
-        if (request->getId() > maxID)
-        {
-            maxID = request->getId();
-        }
-    }
-
-    return maxID;
+    return pendingRequests.size()+inProcessRequests.size()+completedRequests.size()-1;
 }
 ////////
 // end help function

@@ -370,11 +370,11 @@ Close::Close() : CoreAction() {}
 void Close::act(MedicalWareHouse &medWareHouse)
 {
     medWareHouse.addAction(this);
+
     int numberOfRequest = medWareHouse.getLastRequestId();
-    for (int i = 0; i < numberOfRequest; i++)
-        if (medWareHouse.getRequest(i).getId() != -1)
+    for (int i = 0; i <= numberOfRequest; i++)
         {
-            std::cout << medWareHouse.getRequest(i).toString() << std::endl;
+        printWithNewLines(medWareHouse.getRequest(i).toString()) ;
         }
 
     medWareHouse.close();

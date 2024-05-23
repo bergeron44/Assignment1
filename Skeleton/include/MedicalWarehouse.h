@@ -33,7 +33,6 @@ public:
     void updateRequestForVolunteer();
     int getLastRequestId();
     void processCommand(const std::string &command);
-    void printAllRequest();
     void clone();
     void clear();
 
