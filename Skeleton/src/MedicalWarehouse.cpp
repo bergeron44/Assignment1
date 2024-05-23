@@ -61,7 +61,6 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
             iss >> facility_type;
             iss >> location_distance;
             iss >> max_requests;
-            std::cout << beneficiary_name + " registered" << std::endl;
             RegisterBeneficiary *regBeneficiary = new RegisterBeneficiary(beneficiary_name, facility_type, toInt(location_distance), toInt(max_requests));
             regBeneficiary->act(*this);
         }
@@ -93,7 +92,6 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
         }
         else
         {
-            std::cout << "Could not parse: " << line << std::endl;
             continue;
         }
     }
@@ -101,7 +99,6 @@ MedicalWareHouse::MedicalWareHouse(const string &configFilePath)
 }
 void MedicalWareHouse::processCommand(const std::string &command)
 {
-    // Tokenize the command to extract the action and arguments
     std::string action, arg1, arg2, arg3, arg4;
     std::istringstream iss(command);
     iss >> action >> arg1 >> arg2 >> arg3 >> arg4;
@@ -115,7 +112,6 @@ void MedicalWareHouse::processCommand(const std::string &command)
     }
     else if (action == "request")
     {
-        // Handle request command
         int beneficiaryID = std::stoi(arg1);
         std::cout << "Executing request command for beneficiary ID: " << beneficiaryID << std::endl;
         AddRequset *request = new AddRequset(beneficiaryID);
@@ -123,7 +119,6 @@ void MedicalWareHouse::processCommand(const std::string &command)
     }
     else if (action == "register")
     {
-        // Handle register command
         std::string beneficiaryName = arg1;
         std::string type = arg2;
         int distance = std::stoi(arg3);
@@ -134,7 +129,6 @@ void MedicalWareHouse::processCommand(const std::string &command)
     }
     else if (action == "requestStatus")
     {
-        // Handle requestStatus command
         int requestID = std::stoi(arg1);
         std::cout << "Executing requestStatus command for request ID: " << requestID << std::endl;
         PrintRequestStatus *prs = new PrintRequestStatus(requestID);
@@ -142,7 +136,6 @@ void MedicalWareHouse::processCommand(const std::string &command)
     }
     else if (action == "beneficiaryStatus")
     {
-        // Handle beneficiaryStatus command
         int beneficiaryID = std::stoi(arg1);
         std::cout << "Executing beneficiaryStatus command for beneficiary ID: " << beneficiaryID << std::endl;
         PrintBeneficiaryStatus *pbs = new PrintBeneficiaryStatus(beneficiaryID);
@@ -151,7 +144,6 @@ void MedicalWareHouse::processCommand(const std::string &command)
 
     else if (action == "volunteerStatus")
     {
-        // Handle beneficiaryStatus command
         int volunteerID = std::stoi(arg1);
         std::cout << "Executing beneficiaryStatus command for beneficiary ID: " << volunteerID << std::endl;
         PrintVolunteerStatus *pvs = new PrintVolunteerStatus(volunteerID);
@@ -181,7 +173,6 @@ void MedicalWareHouse::processCommand(const std::string &command)
     }
     else
     {
-        // Invalid command
         std::cout << "Invalid command: " << action << std::endl;
     }
 }

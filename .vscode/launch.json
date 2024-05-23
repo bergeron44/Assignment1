@@ -3,11 +3,11 @@
   "configurations": [
     {
       "name": "C/C++ Runner: Debug Session",
-      "type": "lldb",
+      "type": "cppdbg",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/ronberger/Desktop/spl/Skeleton/Skeleton/src",
-      "program": "/Users/ronberger/Desktop/spl/Skeleton/Skeleton/src/build/Debug/outDebug"
+      "cwd": "/workspaces/Assignment1/Skeleton/src",
+      "program": "/workspaces/Assignment1/Skeleton/bin/executable"
     }
   ]
 }

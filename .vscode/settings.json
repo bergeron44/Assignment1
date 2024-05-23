@@ -106,5 +106,7 @@
     "sstream": "cpp",
     "streambuf": "cpp",
     "typeinfo": "cpp"
-  }
+  },
+  "makefile.makefilePath": "/workspaces/Assignment1/Skeleton/Makefile",
+  "makefile.makePath": "/workspaces/Assignment1/Skeleton/Makefile"
 }

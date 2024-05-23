@@ -140,7 +140,6 @@ RegisterBeneficiary::RegisterBeneficiary(const string &beneficiaryName, const st
 
 void RegisterBeneficiary::act(MedicalWareHouse &medWareHouse)
 {
-    medWareHouse.addAction(this);
 
     if ((beneficiaryType1 != beneficiaryType::Clinic && beneficiaryType1 != beneficiaryType::Hospital))
     {
