@@ -62,7 +62,7 @@ beneficiaryType stringToBeneficiaryType(const string &ct)
 
 std::string SimulateStep::toString() const
 {
-    string name = "SimulateStep";
+    string name = "step";
     string args = std::to_string(numOfSteps);
     string s;
     if (this->getStatus() == ActionStatus::ERROR)
@@ -108,7 +108,7 @@ void AddRequset::act(MedicalWareHouse &medWareHouse)
     }
     catch (const std::exception &e)
     {
-        std::cout << "Beneficiary does not exist." << std::endl;
+        std::cout << "canot place this request." << std::endl;
     }
 }
 
@@ -305,7 +305,7 @@ PrintBeneficiaryStatus *PrintBeneficiaryStatus::clone() const
 
 string PrintBeneficiaryStatus::toString() const
 {
-    string name = "PrintBeneficiaryStatus";
+    string name = "beneficiaryStatus";
     string args = std::to_string(beneficiaryId);
     string s;
     if (this->getStatus() == ActionStatus::ERROR)
@@ -349,7 +349,7 @@ PrintVolunteerStatus *PrintVolunteerStatus::clone() const
 
 string PrintVolunteerStatus::toString() const
 {
-    string name = "PrintVolunteerStatus";
+    string name = "volunteerStatus";
     string args = std::to_string(volunteerId);
     string s;
     if (this->getStatus() == ActionStatus::ERROR)
@@ -422,7 +422,7 @@ PrintActionsLog *PrintActionsLog::clone() const
 
 string PrintActionsLog::toString() const
 {
-    string name = "PrintVolunteerStatus";
+    string name = "volunteerStatus";
     string s;
     if (this->getStatus() == ActionStatus::ERROR)
     {
@@ -451,7 +451,7 @@ BackupWareHouse *BackupWareHouse::clone() const
 
 string BackupWareHouse::toString() const
 {
-    string name = "PrintVolunteerStatus";
+    string name = "backup";
     string s;
     if (this->getStatus() == ActionStatus::ERROR)
     {
@@ -489,7 +489,7 @@ RestoreWareHouse *RestoreWareHouse::clone() const
 
 string RestoreWareHouse::toString() const
 {
-    string name = "RestoreWareHouse";
+    string name = "restore";
     string s = "";
     if (this->getStatus() == ActionStatus::ERROR)
     {

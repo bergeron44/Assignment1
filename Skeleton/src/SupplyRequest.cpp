@@ -81,9 +81,15 @@ const string SupplyRequest::toString() const
     {
         str = str + "Inventory Manager: " + std::to_string(getInventoryManagerId()) + "|";
     }
+    else{
+         str = str + "Inventory Manager: None|";
+    }
     if (status != RequestStatus::PENDING && status != RequestStatus::COLLECTING)
     {
         str = str + "Courier: " + std::to_string(getCourierId()) + "|";
+    }
+    else{
+         str = str + "Courier Manager: None|";
     }
     return str;
 }

@@ -17,6 +17,7 @@ class Beneficiary {
         bool canMakeRequest() const; //Returns true if the Beneficiary didn't reach max requests
         const vector<int> &getRequestsIds() const;
         int addRequest(int RequestId); //return RequestId if request was added successfully, -1 otherwise
+        void deleteRequest(int RequestId);
 
         virtual Beneficiary *clone() const = 0; // Return a copy of the Beneficiary
 

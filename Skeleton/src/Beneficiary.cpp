@@ -49,6 +49,19 @@ int Beneficiary::addRequest(int RequestId)
     }
     return -1; // if error accurred
 }
+void Beneficiary::deleteRequest(int RequestId)
+{
+    for (int i = 0; i < requestsId.size(); i++)
+    {
+      
+            if (requestsId[i]== RequestId)
+            {
+                requestsId.erase(requestsId.begin() + i);
+                break;
+            }
+        }
+}
+
 
 HospitalBeneficiary::HospitalBeneficiary(int id, const string &name, int locationDistance, int maxRequests)
     : Beneficiary(id, name, locationDistance, maxRequests) {}

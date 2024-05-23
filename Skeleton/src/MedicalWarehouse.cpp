@@ -345,7 +345,23 @@ void MedicalWareHouse::simulateStep()
     }
    
     //step 3
-     updateRequestForVolunteer();
+     for (int i = 0; i < inProcessRequests.size(); i++)
+    {
+        SupplyRequest *supplyRequest = inProcessRequests[i];
+        // the request is inProcess, we are checking if the process is finished
+        if (supplyRequest->getStatus() == RequestStatus::ON_THE_WAY)
+        {
+            Volunteer &volunteer = getVolunteer(supplyRequest->getCourierId());
+            if (volunteer.getActiveRequestId() != supplyRequest->getId())
+            {
+                supplyRequest->setStatus(RequestStatus::DONE);
+                completedRequests.push_back(supplyRequest);
+                inProcessRequests.erase(inProcessRequests.begin() + i);
+                i--;
+            }
+        }
+    }
+    //  updateRequestForVolunteer();
 
 }
 void MedicalWareHouse::updateRequestForVolunteer()
@@ -391,6 +407,8 @@ void MedicalWareHouse::updateRequestForVolunteer()
                 {
                     if (volunteer->canTakeRequest(*supplyRequest))
                     {
+                        Beneficiary &b=getBeneficiary(supplyRequest->getBeneficiaryId());
+                        b.deleteRequest(supplyRequest->getId());
                         volunteer->acceptRequest(*supplyRequest);
                         supplyRequest->setStatus(RequestStatus::COLLECTING);
 
